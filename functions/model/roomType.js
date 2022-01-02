@@ -1,0 +1,1 @@
+export const RoomType = {}//enum in class diagram
