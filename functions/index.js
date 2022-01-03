@@ -82,7 +82,7 @@ app.put('/removeBlacklistedCustomer/:userId',removeBlacklistedCustomer)
 //users routes
 app.post('/login',login)
 app.get('/availableRooms',getAvailableRooms)
-app.get('/roomUntilPrice/:price',getRoomUntilPrice)
+app.get('/roomUntilPrice/:price',getRoomsUntilPrice)
 app.get('/getMessage/:receiver',getMessage)
 app.get('/rooms',getRooms)
 app.get('/room/:roomId',getRoom)
