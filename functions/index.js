@@ -76,7 +76,7 @@ app.update('/doUnavailableRoom/:roomId',doUnavailableRoom)
 app.post('/room',postRoom)
 app.post('/deleteRoom/:roomId',deleteRoom)
 app.update('/updateRoomDetails/:roomId',updateRoomDetails)
-app.post('/postBlacklistedCustomer',postBlacklistedCustomer)
+app.post('/postBlacklistedCustomer/:userId',postBlacklistedCustomer)
 app.update('/removeBlacklistedCustomer/:userId',removeBlacklistedCustomer)
 
 //users routes
