@@ -18,15 +18,43 @@ exports.login = (req, res) => {
  * @param {*} res 
  */
 //Receptionist,Admin
-exports.getRooms = (req, res) => {}
-
+exports.getRooms = (req, res) => {
+db
+.collection('room')
+.orderBy('availability')
+.get()
+.then((data) => {
+    let room = data.docs.map(d => d.data())
+    return res.json(room)
+})
+.catch(err => {
+    console.error(err)
+    return res.status(500).json("Something went wrong...")
+})
+}
+    
 /**
  * @author Venetia Tassou
  * @param {*} req 
  * @param {*} res 
  */
 //Receptionist,Admin
-exports.getRoom = (req, res) => {}
+exports.getRoom = (req, res) => {
+    let roomId = req.params.roomId
+  
+    db
+    .collection("room")
+    .where("roomId","==",roomId)
+    .limit(1)
+    .get()
+    .then((data) => {
+        return res.json(data.docs[0].data())
+    })
+    .catch(err => {
+        console.error(err)
+        return res.status(500).send("Something went wrong...")
+    })
+  }
 
 /**
  * @author Dimitris Giannopoulos 

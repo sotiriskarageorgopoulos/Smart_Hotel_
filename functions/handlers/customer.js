@@ -74,7 +74,18 @@ exports.getReservationOfCustomer = (req, res) => {
  * @param {*} res 
  */
 exports.getCustomerBonus = (req, res) => {
-
+    let userId = req.params.userId
+    db
+        .collection("customer")
+        .where("userId", "==", userId)
+        .get()
+        .then(data => {
+            return res.json(data.docs[0].data().bonusPoints)
+        })
+        .catch(err => {
+            console.error(err)
+            return res.send("something went wrong")
+        })
 }
 
 /**
@@ -83,5 +94,31 @@ exports.getCustomerBonus = (req, res) => {
  * @param {*} res 
  */
 exports.updateCustomerBonus = (req, res) => {
+    let {
+        userId
+    } = req.params
+    let { bonusPoints } = req.body
+    db
+        .collection("customer")
+        .where('userId', '==', userId)
+        .get()
+        .then((data) => {
+            if (data.docs.length == 0) {
+                return res.status(404).send('No docs found')
+            }
+            data.docs.map(doc => {
+                doc.ref.update({
+                    bonusPoints
+                })
+            })
+            return data
+        })
+        .then(() => {
+            return res.send(`Customer with customerID ${userId} updated succesfully!`)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(500).send('Something went wrong...')
+        })
 
 }
