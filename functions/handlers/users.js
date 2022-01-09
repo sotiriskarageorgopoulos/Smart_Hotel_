@@ -34,8 +34,19 @@ exports.getRoom = (req, res) => {}
  * @param {*} res 
  */
 //Customer,Receptionist,Admin
-exports.getAvailableRooms = (req, res) => {
-
+exports.getAvailableRooms = (req, res) => {//ok
+    db
+    .collection("room")
+    .where("availability","==",true)
+    .get()
+    .then((data) => {
+        let rooms = data.docs.map(d => d.data())
+        return res.json(rooms)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).json("Something went wrong...")
+    })
 }
 
 /**
@@ -44,8 +55,19 @@ exports.getAvailableRooms = (req, res) => {
  * @param {*} res 
  */
 //Customer,Admin
-exports.getReviews = (req, res) => {
-
+exports.getReviews = (req, res) => {//ok
+    db
+    .collection("review")
+    .orderBy("date","desc")
+    .get()
+    .then((data) => {
+        let reviews = data.docs.map(d => d.data())
+        return res.json(reviews)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).json("Something went wrong...")
+    })
 }
 
 /**
@@ -54,7 +76,20 @@ exports.getReviews = (req, res) => {
  * @param {*} res 
  */
 //Customer,Admin
-exports.getReview = (req, res) => {
+exports.getReview = (req, res) => {//ok
+    let reviewId = req.params.revId
+
+    db
+    .collection("review")
+    .where("reviewId","==",reviewId)
+    .get()
+    .then((data) => {
+        return res.json(data.docs[0].data())
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong!")
+    })
 
 }
 
@@ -114,8 +149,29 @@ exports.updateProfileDetails = (req, res) => {
  * @param {*} res 
  */
 //Customer,Admin
-exports.deleteReview = (req, res) => {
+exports.deleteReview = (req, res) => {//ok
+    let {revId} = req.params
 
+    db
+    .collection("review")
+    .where("reviewId","==",revId)
+    .get()
+    .then((data) => {
+        if(data.docs.length == 0) {
+            return res.status(404).send("Documents not found")
+        }
+        data.docs.map(doc => {
+            doc.ref.delete()
+        })
+        return data
+    })
+    .then(() => {
+        return res.send(`The review with id ${revId} deleted successfully!`)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong!")
+    })
 }
 
 /**
@@ -124,7 +180,32 @@ exports.deleteReview = (req, res) => {
  * @param {*} res 
  */
 //Receptionist,Admin
-exports.postReservationDecision = (req, res) => {
+exports.updateReservationDecision = (req, res) => {//problem
+    let {resId} = req.params
+    let updateObj = req.body
+
+    if(Object.keys(updateObj).length == 0) {
+        return res.status(400).send("Malformed request!")
+    }
+
+    db
+    .collection("reservation")
+    .where("reservationId","==",resId)
+    .get()
+    .then((data) => {
+        if(data.docs.length == 0) {
+            return res.status(404).send("Documents not found")
+        }
+        data.docs.map(d => {
+            d.ref.update(updateObj)
+        })
+        return res.send(`Reservation with id ${resId} updated succesfully`)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong")
+    })
+
 
 }
 

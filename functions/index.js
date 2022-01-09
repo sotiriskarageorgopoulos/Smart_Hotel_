@@ -15,7 +15,7 @@ const {
     getMessage,
     updateProfileDetails,
     deleteReview,
-    postReservationDecision,
+    updateReservationDecision,
     getBlackListedCustomer,
     getAllReservationsOfHotel,
     getReservationOfHotel,
@@ -93,7 +93,7 @@ app.get('/getReservationOfHotel/:resId',getReservationOfHotel)
 app.get('/getRoomsByCategory/:category',getRoomsByCategory)
 app.get('/getRoomsUntilPrice/:price',getRoomsUntilPrice)
 app.post('/sendMessage',sendMessage)
-app.post('/postReservationDecision/:resId',postReservationDecision)
+app.put('/updateReservationDecision/:resId',updateReservationDecision)
 app.put('/updateProfileDetails/:userId',updateProfileDetails)
 app.delete('/deleteReview/:revId',deleteReview)
 
