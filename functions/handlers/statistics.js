@@ -78,7 +78,19 @@ exports.getReservationsByMonth = (req, res) => {}
  * @param {*} req 
  * @param {*} res 
  */
-exports.getNumberOfCustomersByNationality = (req, res) => {}
+exports.getNumberOfCustomersByNationality = (req, res) => {
+db
+.collection("customer")
+.get()
+.then((data) => {
+    let customer = data.docs.map(d => d.data())
+    return res.json(customer)
+})
+.catch(err => {
+    console.error(err)
+    return res.status(500).json("Something went wrong...")
+})
+}
 
 /**
  * @author Dimitris Michailidis
