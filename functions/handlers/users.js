@@ -297,7 +297,7 @@ exports.updateReservationDecision = (req, res) => {//problem
  */
 //Receptionist,Admin
 exports.getBlackListedCustomer = (req, res) => {
-
+ 
 }
 
 /**

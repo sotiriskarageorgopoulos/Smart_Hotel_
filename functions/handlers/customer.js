@@ -134,7 +134,23 @@ exports.cancelReservation = (req, res) => {
  * Παραδειγμα
  */
 exports.postReview = (req, res) => {
+    let review = req.body
+    let {reviewId} = review
 
+    if(Object.keys(review).length === 0) {
+        res.status(400).send('There is no review to add!')
+    }
+
+    db
+      .collection("review")
+      .add(review)
+      .then(() => {
+          res.json(`The review with reviewId '${reviewId}' is added to collection!`)
+      })
+      .catch((err) => {
+          console.error(err)
+          res.status(500).json("Something went wrong!")
+      })
 }
 
 /**
