@@ -1,7 +1,4 @@
-import { RoomService } from "./roomService"
-import { RoomType } from "./roomType"
-
-export class Room {
+class Room {
     constructor(roomId, type, descreption, services, capacity, size, availability, image, price) {
         this.roomId = roomId
         this.type = type
@@ -81,5 +78,6 @@ export class Room {
     get getPrice() {
         return this.price
     }
-
 }
+
+module.exports = Room

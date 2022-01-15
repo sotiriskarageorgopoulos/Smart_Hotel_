@@ -21,6 +21,7 @@ const {
     getReservationOfHotel,
     getReviews,
     getReview,
+    getMessages
 } = require("./handlers/users")
 
 const {
@@ -82,7 +83,8 @@ app.put('/removeBlacklistedCustomer/:userId',removeBlacklistedCustomer)
 //users routes
 app.post('/login',login)
 app.get('/availableRooms',getAvailableRooms)
-app.get('/getMessage/:receiver',getMessage)
+app.get('/getMessages/:receiverId',getMessages)
+app.get('/getMessage/:receiverId',getMessage)
 app.get('/rooms',getRooms)
 app.get('/room/:roomId',getRoom)
 app.get('/reviews',getReviews)

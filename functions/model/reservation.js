@@ -1,4 +1,4 @@
-export class Reservation {
+class Reservation {
     constructor(reservationId, roomIds, resDate, duration, price, customerNotes, userId, decision, totalPrice) {
         this.reservationId = reservationId
         this.roomIds = roomIds
@@ -84,3 +84,5 @@ export class Reservation {
     }
 
 }
+
+module.exports = Reservation

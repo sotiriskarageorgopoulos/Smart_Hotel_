@@ -11,7 +11,7 @@ const {
 exports.getReservationsByDay = (req, res) => {}
 
 /**
- * @author George Koulos
+ * @author Dimitris Giannopoulos
  * @param {*} req 
  * @param {*} res 
  */

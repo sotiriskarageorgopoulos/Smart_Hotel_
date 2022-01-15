@@ -14,6 +14,7 @@ const {
     validateRegisterData
 } = require('../util/helper_functions')
 
+const Review = require('../model/review')
 /**
  * @author Sotiris Karageorgopoulos <sotiriskarageorgopoulos@gmail.com>
  * @param {*} req 
@@ -134,8 +135,9 @@ exports.cancelReservation = (req, res) => {
  * Παραδειγμα
  */
 exports.postReview = (req, res) => {
-    let review = req.body
-    let {reviewId} = review
+    let {reviewId, userId, comment, date, rating} = req.body
+
+    let review = new Review(reviewId, userId, comment, date, rating)
 
     if(Object.keys(review).length === 0) {
         res.status(400).send('There is no review to add!')
@@ -143,9 +145,9 @@ exports.postReview = (req, res) => {
 
     db
       .collection("review")
-      .add(review)
+      .add(JSON.parse(JSON.stringify(review)))
       .then(() => {
-          res.json(`The review with reviewId '${reviewId}' is added to collection!`)
+          res.send(`The review with reviewId '${reviewId}' is added to collection!`)
       })
       .catch((err) => {
           console.error(err)

@@ -210,6 +210,15 @@ exports.sendMessage = (req, res) => {
  * @param {*} res 
  */
 //Customer,Receptionist,Admin
+exports.getMessages = (req, res) => {
+
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.getMessage = (req, res) => {
 
 }
