@@ -181,6 +181,19 @@ exports.getReview = (req, res) => {//ok
  */
 //Customer,Receptionist,Admin
 exports.getRoomsByCategory = (req, res) => {
+    let roomId = req.params.category
+  
+    db
+    .collection("room")
+    .where("roomId","==",roomId)
+    .get()
+     .then((data) => {
+        return res.json(data.docs[0].data())
+     })
+     .catch(err => {
+        console.error(err)
+        return res.status(500).send("Something went wrong...")
+  })
 
 }
 
@@ -297,8 +310,24 @@ exports.updateReservationDecision = (req, res) => {//problem
  */
 //Receptionist,Admin
 exports.getBlackListedCustomer = (req, res) => {
-
+    let userId = req.params.userId
+    db
+    .collection("customer")
+    .where("userId","==",userId)
+    .get()
+    .then((data) =>{
+        if(data.docs[0].data().blackListed == true){
+            return res.json(data.docs[0].data())
+        }
+        return res.send('Customer is not blacklisted')
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong")
+    })
 }
+
+
 
 /**
  * @author Dimitris Michailidis

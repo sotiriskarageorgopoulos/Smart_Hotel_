@@ -8,7 +8,20 @@ const {
  * @param {*} req 
  * @param {*} res 
  */
-exports.getReservationsByDay = (req, res) => {}
+exports.getReservationsByDay = (req, res) => {
+    db
+    .collection("reservation")
+    .orderBy("resDate","desc")
+    .get()
+    .then((data) => {
+        let reservation = data.docs.map(d => d.data())
+        return res.json(reservation)
+    })
+    .catch(err => {
+        console.error(err)
+        return res.status(500).json("Something went wrong...")
+    })
+}
 
 /**
  * @author George Koulos
