@@ -2,7 +2,7 @@ const {
     User
 } = require('./user')
 
-export class Customer extends User {
+class Customer extends User {
     constructor(userId, name, surname, birthDate, email, tel, password, image, nationality, bonusPoints, blackListed) {
         super(userId, name, surname, birthDate, email, tel, password, image)
         this.bonusPoints = bonusPoints
@@ -35,3 +35,5 @@ export class Customer extends User {
     }
 
 }
+
+module.exports = Customer

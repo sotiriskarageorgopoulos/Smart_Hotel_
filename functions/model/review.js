@@ -1,4 +1,4 @@
-export class Review {
+class Review {
     constructor(reviewId, userId, comment, date, rating) {
             this.reviewId = reviewId
             this.userId = userId
@@ -47,3 +47,5 @@ export class Review {
         return this.rating
     }
 }
+
+module.exports = Review

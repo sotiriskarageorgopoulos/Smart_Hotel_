@@ -74,3 +74,5 @@ export class User {
             return this.image
         }
 }
+
+module.exports = User
