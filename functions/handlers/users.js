@@ -297,16 +297,42 @@ exports.updateReservationDecision = (req, res) => {//problem
  */
 //Receptionist,Admin
 exports.getBlackListedCustomer = (req, res) => {
-
+    let userId = req.params.userId
+    db
+    .collection("customer")
+    .where("userId","==",userId)
+    .get()
+    .then((data) =>{
+        if(data.docs[0].data().blackListed == true){
+            return res.json(data.docs[0].data())
+        }
+       return res.send('Customer is not blacklisted')
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong")
+    })
 }
 
 /**
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ */ //ok
 //Receptionist,Admin
 exports.getAllReservationsOfHotel = (req, res) => {
+    db
+    .collection("reservation")
+    .orderBy("resDate","desc")
+    .get()
+    .then((data) =>{
+        let reservations = data.docs.map(d => d.data())
+        return res.json(reservations)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).json("Something went wrong...")
+    })
 
 }
 
@@ -314,8 +340,24 @@ exports.getAllReservationsOfHotel = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ *///ok
 //Receptionist,Admin
 exports.getReservationOfHotel = (req, res) => {
+let resId = req.params.resId
+
+db
+.collection("reservation")
+.where("reservationId","==",resId)
+.get()
+.then((data) =>{
+    if(data.docs.length == 0){
+        return res.send('The reservation does not exist')
+    }
+    return res.json(data.docs[0].data())
+})
+.catch((err) => {
+    console.error(err)
+    return res.status(500).send("Something went wrong")
+})
 
 }

@@ -71,7 +71,7 @@ app.get("/mostDemandRooms/:number",getMostDemandRooms)
 //administrator routes
 app.put('/updateRoomPrice/:roomId',updateRoomPrice)
 app.put('/updateRoomPriceWithDiscount/:roomId',updateRoomPriceWithDiscount)
-app.put('/updateRoomReservation/:roomId',updateRoomReservation)
+app.put('/updateRoomReservation/:reservationId/:roomId',updateRoomReservation)
 app.put('/doUnavailableRoom/:roomId',doUnavailableRoom)
 app.post('/room',postRoom)
 app.post('/deleteRoom/:roomId',deleteRoom)

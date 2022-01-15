@@ -122,9 +122,29 @@ exports.doReservation = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ *///ok
 exports.cancelReservation = (req, res) => {
+    let resId = req.params.resId;
 
+    db
+    .collection("reservation")
+    .where("reservationId","==", resId)
+    .get()
+    .then((data)=>{
+        if(data.docs.length == 0){
+            return res.status(404).send("Documents not found")
+        }
+        data.docs.map(doc => {doc.ref.delete()
+        })
+        return data
+    })
+    .then(() => {
+        return res.send(`Reservation with id: ${resId} deleted successfully!`)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong!")
+    })
 }
 
 /**
