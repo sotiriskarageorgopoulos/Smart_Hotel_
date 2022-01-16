@@ -43,7 +43,7 @@ const {
 const {
     updateRoomPrice,
     updateRoomPriceWithDiscount,
-    updateRoomReservation,
+    upgradeRoomReservation,
     doUnavailableRoom,
     postRoom,
     deleteRoom,
@@ -72,7 +72,7 @@ app.get("/mostDemandRooms/:number",getMostDemandRooms)
 //administrator routes
 app.put('/updateRoomPrice/:roomId',updateRoomPrice)
 app.put('/updateRoomPriceWithDiscount/:roomId',updateRoomPriceWithDiscount)
-app.put('/updateRoomReservation/:roomId',updateRoomReservation)
+app.put('/upgradeRoomReservation/:reservationId/:roomId',upgradeRoomReservation)
 app.put('/doUnavailableRoom/:roomId',doUnavailableRoom)
 app.post('/room',postRoom)
 app.post('/deleteRoom/:roomId',deleteRoom)
@@ -104,7 +104,7 @@ app.get('/reservations/:userId',getReservationsOfCustomer)
 app.get('/reservation/:resId/:userId',getReservationOfCustomer)
 app.get('/getCustomerBonus/:userId',getCustomerBonus)
 app.post('/postReview',postReview)
-app.post('/reservation/:roomId',doReservation)
+app.post('/doReservation',doReservation)
 app.post('/register',register)
 app.put('/updateReview/:revId',updateReview)
 app.put('/updateCustomerBonus/:userId',updateCustomerBonus)

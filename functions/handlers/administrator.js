@@ -22,14 +22,79 @@ exports.updateRoomPriceWithDiscount = (req, res) => {}
  * @param {*} req 
  * @param {*} res 
  */
-exports.updateRoomReservation = (req, res) => {}
+exports.upgradeRoomReservation = (req, res) => {
+    
+    let reservationId = req.params.reservationId
+    let roomId = req.params.roomId
+    let updateObj = req.body
+
+    if(Object.keys(updateObj).length === 0) {
+        return res.status(400).json("No such Reservation")
+    }
+    db
+    .collection("reservation")
+    .where("reservationId","==",reservationId)
+    .limit(1)
+    .get()
+    .then((data)=>{
+        let roomsIds = data.docs[0].data().roomsIds
+        let indexOfDeletedRoom = roomsIds.indexOf(roomId)
+        roomsIds[indexOfDeletedRoom] = updateObj.roomId
+        db
+        .collection("reservation")
+        .where("reservationId","==",reservationId)
+        .get()
+        .then((data) => {
+            if(data.docs.length === 0){
+                return res.status(404).send("Documents not found")
+            }
+            data.docs.map((doc) => {
+                doc.ref.update({roomsIds})
+            })
+            return res.send("Reservation upgraded successfully")
+        })
+    })
+    .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
+    
+
+
+}
 
 /**
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
-exports.doUnavailableRoom = (req, res) => {}
+ */ //ok
+exports.doUnavailableRoom = (req, res) => {
+    let roomId = req.params.roomId;
+
+
+    db
+        .collection("room")
+        .where("roomId", "==", roomId)
+        .get()
+        .then((data) => {
+            if (data.docs[0].data().availability == false) {
+                return res.send('Room is already unavailable')
+            }
+            data.docs.map(doc => {
+                doc.ref.update({
+                    availability: false
+                })
+            })
+            return data
+        })
+        .then(() => {
+            return res.send(`Room ${roomId} is now unavailable`)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(500).send('Something went wrong...')
+        })
+}
 
 /**
  * @author George Koulos
