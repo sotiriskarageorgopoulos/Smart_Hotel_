@@ -2,7 +2,7 @@ const {
     admin,
     db
 } = require('../util/admin')
-
+const Room = require("../model/room")
 /**
  * @author George Koulos
  * @param {*} req 
@@ -10,7 +10,7 @@ const {
  */
 exports.updateRoomPrice = (req, res) => {
     let { roomId } = req.params
-    let { RoomPrice } = req.body
+    let { price } = req.body
 
     db
         .collection("room")
@@ -21,12 +21,12 @@ exports.updateRoomPrice = (req, res) => {
                 return res.status(400).send("Malformed request!")
               }    
             data.docs.map(doc => {
-                 doc.ref.update({RoomPrice})
+                 doc.ref.update({price})
             })
             return data
     })
     .then(() => {
-        return res.send(`room with roomId ${roomId} updated successfully!`)
+        return res.send(`room price for roomId ${roomId} updated successfully!`)
     })
     .catch(err => {
         console.error(err)
@@ -41,7 +41,7 @@ exports.updateRoomPrice = (req, res) => {
  */
 exports.updateRoomPriceWithDiscount = (req, res) => {
     let { roomId } = req.params
-    let { DiscountRoomPrice } = req.body
+    let { discount} = req.body
 
     db
         .collection("room")
@@ -50,14 +50,15 @@ exports.updateRoomPriceWithDiscount = (req, res) => {
         .then((data) => {
             if(data.docs.length == 0) {
                 return res.status(400).send("Malformed request!")
-              }    
+              }   
+              let price = data.docs[0].data().price-(data.docs[0].data().price*Number(discount)) 
             data.docs.map(doc => {
-                 doc.ref.update({DiscountRoomPrice})
+                 doc.ref.update({price})
             })
             return data
     })
     .then(() => {
-        return res.send(`room with roomId ${roomId} updated successfully!`)
+        return res.send(`price with discount for roomId ${roomId} updated successfully!`)
     })
     .catch(err => {
         console.error(err)
@@ -85,25 +86,13 @@ exports.doUnavailableRoom = (req, res) => {}
  * @param {*} res 
  */
 exports.postRoom = (req, res) => {
-    let {roomId} = req.params
-
+    let {roomId,type,description,services,capacity,size, availability, image, price}= req.body
+    let room = new Room(roomId,type,description,services,capacity,size, availability, image, price)
     db
         .collection("room")
-        .where('roomId', '==', roomId)
-        .get()
-        .then((data) => {
-            if (data.docs.length == 0) {
-                return res.status(404).send('No docs found')
-            }
-            data.docs.map(doc => {
-                doc.ref.update({
-                    roomId: true
-                })
-            })
-            return data
-        })
+        .add(JSON.parse(JSON.stringify(room)))
         .then(() => {
-            return res.send(`Room with roomId ${roomId} updated succesfully!`)
+            return res.send(`Room with roomId ${roomId} added succesfully!`)
         })
         .catch(err => {
             console.error(err)
@@ -124,6 +113,9 @@ exports.deleteRoom = (req, res) => {
     .where('roomId','==',roomId)
     .get()
     .then((data) => {
+        if(data.docs.length===0){
+            return res.status(404).send("Documents not found")
+        }
         data.docs.map(doc => {
             doc.ref.delete()
         })
@@ -144,7 +136,7 @@ exports.deleteRoom = (req, res) => {
  */
 exports.updateRoomDetails = (req, res) => {
     let { roomId } = req.params
-    let { RoomDetails } = req.body
+    let roomDetails  = req.body
 
     db
         .collection("room")
@@ -155,7 +147,7 @@ exports.updateRoomDetails = (req, res) => {
                 return res.status(400).send("Malformed request!")
               }    
             data.docs.map(doc => {
-                 doc.ref.update({RoomDetails})
+                 doc.ref.update(roomDetails)
             })
             return data
     })

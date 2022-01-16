@@ -1,4 +1,4 @@
-export class Message {
+class Message {
     constructor(senderId, receiverId, subject, text, date, isRead) {
         this.senderId = senderId
         this.receiverId = receiverId
@@ -55,6 +55,6 @@ export class Message {
     get getIsRead() {
         return this.isRead
     }
-
-
 }
+
+module.exports = Message

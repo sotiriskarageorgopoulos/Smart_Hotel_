@@ -1,4 +1,4 @@
-export class ReceptionistNode {
+class ReceptionistNote {
     constructor(receptionistId, reservationId, date, text){
         this.receptionistId = receptionistId
         this.reservationId = reservationId
@@ -38,3 +38,5 @@ export class ReceptionistNode {
         return this.text
     }
 }
+
+module.exports = ReceptionistNote

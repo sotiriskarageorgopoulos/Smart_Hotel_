@@ -1,5 +1,5 @@
-export class Reservation {
-    constructor(reservationId, roomIds, resDate, duration, price, customerNotes, userId, decision) {
+class Reservation {
+    constructor(reservationId, roomIds, resDate, duration, price, customerNotes, userId, decision, totalPrice) {
         this.reservationId = reservationId
         this.roomIds = roomIds
         this.resDate = resDate
@@ -8,6 +8,7 @@ export class Reservation {
         this.customerNotes = customerNotes
         this.userId = userId
         this.decision = decision
+        this.totalPrice = totalPrice
     }
 
     set setReservationId(reservationId) {
@@ -74,4 +75,14 @@ export class Reservation {
         return this.decision
     }
 
+    set setTotalPrice(totalPrice) {
+        this.totalPrice = totalPrice
+    }
+
+    get getTotalPrice() {
+        return this.totalPrice
+    }
+
 }
+
+module.exports = Reservation

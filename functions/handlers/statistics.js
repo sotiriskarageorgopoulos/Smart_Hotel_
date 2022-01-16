@@ -8,14 +8,30 @@ const {
  * @param {*} req 
  * @param {*} res 
  */
-exports.getReservationsByDay = (req, res) => {
+exports.getReservationsByDate = (req, res) => {
     db
     .collection("reservation")
-    .orderBy("resDate","desc")
     .get()
     .then((data) => {
         let reservation = data.docs.map(d => d.data())
-        return res.json(reservation)
+        return reservation
+    })
+    .then((data) => {
+        let dates = []
+        data.map(d => {
+            let date = new Date(d.resDate._seconds * 1000).toISOString().slice(0, 10)
+            dates.push(date)
+        })
+        dates = [...new Set(dates)]
+        let resByDate = []
+        dates.map(date => {
+            let reservations = data.filter(d => date === new Date(d.resDate._seconds * 1000).toISOString().slice(0, 10)).length
+            resByDate.push({
+                date,
+                reservations
+            })
+        })
+        return res.json(resByDate)
     })
     .catch(err => {
         console.error(err)
@@ -24,7 +40,7 @@ exports.getReservationsByDay = (req, res) => {
 }
 
 /**
- * @author George Koulos
+ * @author Dimitris Giannopoulos
  * @param {*} req 
  * @param {*} res 
  */

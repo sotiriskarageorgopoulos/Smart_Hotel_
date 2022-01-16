@@ -180,21 +180,23 @@ exports.getReview = (req, res) => {//ok
  * @param {*} res 
  */
 //Customer,Receptionist,Admin
-exports.getRoomsByCategory = (req, res) => {
-    let roomId = req.params.category
+exports.getRoomsByType = (req, res) => {
+    let type = req.params.type
   
     db
     .collection("room")
-    .where("roomId","==",roomId)
+    .where("type","==",type)
     .get()
-     .then((data) => {
-        return res.json(data.docs[0].data())
+     .then(data=> {
+        return data.docs.map(d=> d.data())
+     })
+     .then(data => {
+         return res.json(data)
      })
      .catch(err => {
         console.error(err)
-        return res.status(500).send("Something went wrong...")
-  })
-
+        return res.status(500).send("Something went wrong")
+    })
 }
 
 /**
@@ -204,8 +206,21 @@ exports.getRoomsByCategory = (req, res) => {
  */
 //Customer,Receptionist,Admin
 exports.getRoomsUntilPrice = (req, res) => {
+    let price = req.params.price
+        db
+        .collection("room")
+        .where("price","<=",Number(price))
+            .get()
+            .then((data) => {
+             return res.json(data.docs.map(d => d.data()))
+            })
+            .catch(err => {
+                    console.error(err)
+                    return res.status(500).json("Something went wrong...")
+        })
+    }
 
-}
+
 
 /**
  * @author Venetia Tassou
@@ -223,6 +238,15 @@ exports.sendMessage = (req, res) => {
  * @param {*} res 
  */
 //Customer,Receptionist,Admin
+exports.getMessages = (req, res) => {
+
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.getMessage = (req, res) => {
 
 }
@@ -309,17 +333,17 @@ exports.updateReservationDecision = (req, res) => {//problem
  * @param {*} res 
  */
 //Receptionist,Admin
-exports.getBlackListedCustomer = (req, res) => {
+exports.getCustomer = (req, res) => {
     let userId = req.params.userId
     db
     .collection("customer")
     .where("userId","==",userId)
     .get()
     .then((data) =>{
-        if(data.docs[0].data().blackListed == true){
-            return res.json(data.docs[0].data())
-        }
-        return res.send('Customer is not blacklisted')
+     if (data.docs.length === 0) {
+         return res.status(404).send("Documents not found")
+    }
+    return res.json(data.docs[0].data())
     })
     .catch((err) => {
         console.error(err)

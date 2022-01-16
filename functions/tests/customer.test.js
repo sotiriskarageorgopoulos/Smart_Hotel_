@@ -219,5 +219,29 @@ suite('Customer handler testing...', () => {
                     })
             })
         })
+
+        /**
+         * @author Sotiris Karageorgopoulos
+         */
+        suite('POST /postReview', () => {
+            test('Testing the postReview endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .post('/postReview')
+                    .type('form')
+                    .send({
+                        userId:"zTJyKwYSMEelU24s19b58BuJoAd2",
+                        reviewId:"jdndnj",
+                        rating:"5",
+                        date:"2022-01-15T11:30:46Z",
+                        comment:"csnjncsjnc csjnncsjncsnj scnjjcnsnjsc njcsjncsjn csnjcnsjn scjncnjsjn ncjsn"
+                    })
+                    .end((err,res) => {
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        assert.strictEqual(res.text,`The review with reviewId 'jdndnj' is added to collection!`)
+                        done()
+                    })
+            })
+        })
     })
 })
