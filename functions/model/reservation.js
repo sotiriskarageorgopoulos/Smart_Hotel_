@@ -1,10 +1,9 @@
 class Reservation {
-    constructor(reservationId, roomIds, resDate, duration, price, customerNotes, userId, decision, totalPrice) {
+    constructor(reservationId, roomIds, resDate, duration, customerNotes, userId, decision, totalPrice) {
         this.reservationId = reservationId
         this.roomIds = roomIds
         this.resDate = resDate
         this.duration = duration
-        this.price = price
         this.customerNotes = customerNotes
         this.userId = userId
         this.decision = decision
@@ -41,14 +40,6 @@ class Reservation {
 
     get getDuration() {
         return this.duration = duration
-    }
-
-    set setPrice(price) {
-        this.price = price
-    }
-
-    get getPrice() {
-        return this.price
     }
 
     set setCustomerNotes(customerNotes) {

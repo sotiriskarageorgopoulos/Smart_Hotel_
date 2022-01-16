@@ -15,7 +15,44 @@ exports.getReservationsByDay = (req, res) => {}
  * @param {*} req 
  * @param {*} res 
  */
-exports.getIncomeByDay = (req, res) => {}
+exports.getIncomeByDay = (req, res) => {
+    db
+    .collection("reservation")
+    .get()
+    .then((data) => {
+        return data.docs.map(d => d.data())
+    })
+    .then((data) => {
+        let dates = []
+        data.map(d => {
+            let date = new Date((d.resDate._seconds)*1000).toISOString().slice(0,10)
+            dates.push(date)
+        })
+        dates = [...new Set(dates)]
+        let incomeOfDate = []
+        dates.map(d => {
+            let totalIncome = 0
+            data
+            .filter(doc => {
+                let date = new Date((doc.resDate._seconds)*1000).toISOString().slice(0,10)
+                return date === d
+            })
+            .map(doc => {
+                totalIncome += doc.totalPrice
+            })
+            incomeOfDate.push({date:d , totalIncome})
+        })
+        return incomeOfDate
+    })
+    .then(data => {
+        return res.json(data)
+    })
+    .catch(err => {
+        console.error(err)
+        return res.status(500).send("Something went wrong")
+    })
+}
+
 
 /**
  * @author Dimitris Giannopoulos
