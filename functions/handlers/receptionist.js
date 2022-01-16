@@ -2,7 +2,7 @@ const {
     admin,
     db
 } = require('../util/admin')
-
+const ReceptionistNote = require('../model/receptionistNote')
 /**
  * @author Venetia Tassou
  * @param {*} req 
@@ -11,7 +11,9 @@ const {
 exports.postNotesAboutReservation = (req, res) => {
 
     let {resId} = req.params
-    let receptionistNote = req.body
+    let {receptionistId, reservationId,date, text} = req.body
+
+    let receptionistNote = new ReceptionistNote(receptionistId, reservationId,date, text)
 
     if(Object.keys(receptionistNote).length == 0) {
         return res.status(400).send("Malformed request!")
@@ -19,7 +21,7 @@ exports.postNotesAboutReservation = (req, res) => {
 
     db
     .collection("receptionistNote")
-    .add(receptionistNote)
+    .add(JSON.parse(JSON.stringify(receptionistNote)))
     .then (() => {
         return res.send(`The notes of the reservation ${resId} has been added`)
     })
