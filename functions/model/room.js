@@ -1,6 +1,6 @@
 class Room {
-    constructor(roomId, type, descreption, services, capacity, size, availability, image, price) {
-        this.roomId = roomId
+    constructor(roomsIds, type, descreption, services, capacity, size, availability, image, price) {
+        this.roomsIds = roomsIds
         this.type = type
         this.descreption = descreption
         this.services = services
@@ -11,12 +11,12 @@ class Room {
         this.price = price
     }
 
-    set setRoomId(roomId) {
-        this.roomId = roomId
+    set setRoomId(roomsIds) {
+        this.roomsIds = roomsIds
     }
 
-    get getRoomId() {
-        return this.roomId
+    get getRoomsIds() {
+        return this.roomsIds
     }
 
     set setType(type) {
