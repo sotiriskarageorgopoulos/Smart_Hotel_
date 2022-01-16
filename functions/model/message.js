@@ -3,7 +3,7 @@ class Message {
         this.senderId = senderId
         this.receiverId = receiverId
         this.susbject = subject
-        this.tetxt = text
+        this.text = text
         this.date = date
         this.isRead = isRead
     }

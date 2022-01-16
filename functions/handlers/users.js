@@ -193,7 +193,7 @@ exports.getRoomsByCategory = (req, res) => {
 exports.getRoomsUntilPrice = (req, res) => {
 
 }
-
+const Message = require('../model/message')
 /**
  * @author Venetia Tassou
  * @param {*} req 
@@ -201,7 +201,30 @@ exports.getRoomsUntilPrice = (req, res) => {
  */
 //Customer,Receptionist,Admin
 exports.sendMessage = (req, res) => {
+    let {
+        senderId,
+        receiverId,
+        susbject,
+        text,
+        date,
+        isRead
+    } = req.body
 
+    let message = new Message(senderId, receiverId, susbject, text, date, isRead)
+
+    if (Object.keys(message).length == 0) {
+        return res.status(400).send("Malformed request!")
+    }
+    db
+        .collection("message")
+        .add(JSON.parse(JSON.stringify(message)))
+        .then(() => {
+            return res.send(`The message send by ${senderId}`)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(500).send('Something went wrong...')
+        })
 }
 
 /**
@@ -212,6 +235,23 @@ exports.sendMessage = (req, res) => {
 //Customer,Receptionist,Admin
 exports.getMessages = (req, res) => {
 
+    let receiverId = req.params.receiverId
+
+    db
+        .collection("message")
+        .where("receiverId", "==", receiverId)
+        .get()
+        .then((data) => {
+            let messages = []
+            data.docs.map(d => {
+                messages.push(d.data())
+            })
+            return res.json(messages)
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
 }
 
 /**
@@ -232,13 +272,71 @@ exports.getMessage = (req, res) => {
 exports.updateProfileDetails = (req, res) => {
     let userId = req.params.userId
     let updOject = req.body
-
     if (Object.keys(updOject).length == 0) {
         return res.status(400).send("Malformed request!")
     }
 
     db
-    collection("")
+        .collection("customer")
+        .where("userId", "==", userId)
+        .limit(1)
+        .get()
+        .then((data) => {
+            if (data.docs.length > 0) {
+                data.docs.map(d => {
+                    d.ref.update(updOject)
+                })
+                return res.send(`The profile with id: ${userId} has been updated`)
+            }
+            return data
+        })
+        .then(() => {
+            db
+                .collection("receptionist")
+                .where("userId", "==", userId)
+                .limit(1)
+                .get()
+                .then((data) => {
+                    if (data.docs.length > 0) {
+                        data.docs.map(d => {
+                            d.ref.update(updOject)
+
+                        })
+                        return res.send(`The profile with id: ${userId} has been updated`)
+                    }
+                    return data
+                })
+                .then(() => {
+                    db
+                        .collection("administrator")
+                        .where("userId", "==", userId)
+                        .limit(1)
+                        .get()
+                        .then((data) => {
+                            if (data.docs.length > 0) {
+                                data.docs.map(d => {
+                                    d.ref.update(updOject)
+                                })
+                                return res.send(`The profile with id: ${userId} has been updated`)
+                                
+                            }
+                            return res.status(404).send("Documents not found")   
+                        })
+                        .catch(err => {
+                            console.error(err)
+                            return res.status(500).send("Something went wrong...")
+                        })
+                })
+                .catch(err => {
+                    console.error(err)
+                    return res.status(500).send("Something went wrong...")
+                })
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
+
 
 }
 

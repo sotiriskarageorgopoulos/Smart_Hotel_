@@ -115,40 +115,54 @@ exports.register = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ */ //ok
 exports.doReservation = (req, res) => {
     let {
         reservationId,
-        roomIds,
+        roomsIds,
         resDate,
         duration,
-        price,
         customerNotes,
         userId,
         decision,
-        totalPrice
     } = req.body
-    let reservation = new Reservation(reservationId, roomIds, resDate, duration, price, customerNotes, userId, decision, totalPrice)
-    let roomId = req.params.roomId
-
+    const reservation = new Reservation(reservationId, roomsIds, resDate, duration, customerNotes, userId, decision, 0)
 
     if (Object.keys(reservation).length === 0) {
         res.status(400).send('There is no Reservation to commit')
     }
-    db
-        .collection("reservation")
-        .add(JSON.parse(JSON.stringify(reservation)))
-        .then(() => {
-
-            res.send(`The Reservation with ID: '${reservationId}' is commited succesfully for room ${roomId}!`)
-
-        })
-
-
-        .catch((err) => {
-            console.error(err)
-            res.status(500).json("Something went wrong!")
-        })
+    let roomsPrice = 0
+    let totalPrice = 0
+    roomsIds.map((rId, index) => {
+        db
+            .collection("room")
+            .where("roomId", "==", rId)
+            .get()
+            .then((data) => {
+                roomsPrice += data.docs[0].data().price
+                return roomsPrice
+            })
+            .then((roomsPrice) => {
+                totalPrice = duration * roomsPrice
+                reservation.setTotalPrice = totalPrice
+                if (roomsIds.length -1 === index) {
+                    db
+                        .collection("reservation")
+                        .add(JSON.parse(JSON.stringify(reservation)))
+                        .then(() => {
+                            res.send(`The Reservation with ID: '${reservationId}' is commited succesfully!`)
+                        })
+                        .catch((err) => {
+                            console.error(err)
+                            res.status(500).json("Something went wrong!")
+                        })
+                }
+            })
+            .catch((err) => {
+                console.error(err)
+                return res.status(500).send("Something went wrong")
+            })
+    })
 }
 
 /**

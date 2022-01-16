@@ -22,7 +22,7 @@ exports.updateRoomPriceWithDiscount = (req, res) => {}
  * @param {*} req 
  * @param {*} res 
  */
-exports.updateRoomReservation = (req, res) => {
+exports.upgradeRoomReservation = (req, res) => {
     
     let reservationId = req.params.reservationId
     let roomId = req.params.roomId
@@ -34,11 +34,26 @@ exports.updateRoomReservation = (req, res) => {
     db
     .collection("reservation")
     .where("reservationId","==",reservationId)
+    .limit(1)
     .get()
-    
-
-
-    
+    .then((data)=>{
+        let roomsIds = data.docs[0].data().roomsIds
+        let indexOfDeletedRoom = roomsIds.indexOf(roomId)
+        roomsIds[indexOfDeletedRoom] = updateObj.roomId
+        db
+        .collection("reservation")
+        .where("reservationId","==",reservationId)
+        .get()
+        .then((data) => {
+            if(data.docs.length === 0){
+                return res.status(404).send("Documents not found")
+            }
+            data.docs.map((doc) => {
+                doc.ref.update({roomsIds})
+            })
+            return res.send("Reservation upgraded successfully")
+        })
+    })
     .catch((err) => {
             console.error(err)
             return res.status(500).send("Something went wrong")
@@ -55,11 +70,7 @@ exports.updateRoomReservation = (req, res) => {
  */ //ok
 exports.doUnavailableRoom = (req, res) => {
     let roomId = req.params.roomId;
-    let updateObj = req.body;
 
-    if (Object.keys(updateObj).length == 0) {
-        return res.status(400).send("Malformed request!")
-    }
 
     db
         .collection("room")
