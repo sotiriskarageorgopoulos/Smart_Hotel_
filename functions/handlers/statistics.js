@@ -72,6 +72,19 @@ exports.getRoomWithMaxReservations = (req, res) => {//went wrong
  * @param {*} res 
  */
 exports.getReservationsByMonth = (req, res) => {}
+db
+.collection("reservation")
+.get()
+.then((data) => {
+    let reservation = data.docs.map(d => d.data())
+    return reservation
+})
+.then((data) => {
+    let months = []
+    data.map(d =>{
+        months.push(d.resDate)
+    })
+})
 
 /**
  * @author Venetia Tassou

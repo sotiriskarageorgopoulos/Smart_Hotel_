@@ -23,16 +23,27 @@ exports.updateRoomPriceWithDiscount = (req, res) => {}
  * @param {*} res 
  */
 exports.updateRoomReservation = (req, res) => {
-    let reservationId = req.params.reservationId;
-    let updateObj = req.params;
     
+    let reservationId = req.params.reservationId
+    let roomId = req.params.roomId
+    let updateObj = req.body
+
+    if(Object.keys(updateObj).length === 0) {
+        return res.status(400).json("No such Reservation")
+    }
     db
     .collection("reservation")
     .where("reservationId","==",reservationId)
     .get()
-    .then((data) =>{
-        
-    })
+    
+
+
+    
+    .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
+    
 
 
 }
