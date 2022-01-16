@@ -105,6 +105,21 @@ suite('Users handler testing...', () => {
                     })
             })
         })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+         suite('DELETE /deleteReview', () => {
+            test('Testing delete endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .delete('/deleteReview/ghhghfhf')
+                    .end((err,res) => {
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        assert.strictEqual(res.text, `The document with reviewId 'ghhghfhf' deleted successfully`)
+                        done()
+                    })
+            })
+        })
 
         
     })

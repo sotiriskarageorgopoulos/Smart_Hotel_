@@ -184,7 +184,7 @@ exports.updateReview = (req, res) => {  //problem
         return data
     })
     .then(() => {
-        return res.send(`The document with id ${revId} updated successfully`)
+        return res.send(`The document with reviewId ${revId} updated successfully`)
     })
     .catch((err) => {
         console.error(err)

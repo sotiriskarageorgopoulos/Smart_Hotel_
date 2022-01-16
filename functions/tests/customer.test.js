@@ -243,5 +243,87 @@ suite('Customer handler testing...', () => {
                     })
             })
         })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+        suite('GET /reservations', () => {
+            test('Testing the getReservationsOfCustomer endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .get('/reservations/zTJyKwYSMEelU24s19b58BuJoAd2')
+                    .type('form')
+                    .end((err, res) => {
+                       let result = [{
+                        totalPrice: "100",
+                        reservationId: "sjfjsfs",
+                        decision: "accepted",
+                        roomsIds: ["301"],
+                        duration: "1",
+                        userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
+                        resDate: "2022-01-02T10:00:00Z",
+                        customerNotes: "kfkjs"
+                       },
+                       {
+                       totalPrice: "150",
+                       reservationId: "res229",
+                       decision: "accepted",
+                       roomsIds: ["65"],
+                       duration: "2",
+                       userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
+                       resDate: "2022-01-13T09:15:00Z",
+                       customerNotes: ". . . . . . ."
+                       }]
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        assert.strictEqual(JSON.parse(res.body), result, 'The JSON must be valid')
+                        done()
+                    })
+            })
+        })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+        suite('GET /reservation', () => {
+            test('Testing the getReservationOfCustomer endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .get('/reservation/res229/zTJyKwYSMEelU24s19b58BuJoAd2')
+                    .type('form')
+                    .end((err, res) => {
+                       let result = {
+                        totalPrice: "150",
+                        reservationId: "res229",
+                        decision: "accepted",
+                        roomsIds: ["65"],
+                        duration: "2",
+                        userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
+                        resDate: "2022-01-13T09:15:00Z",
+                        customerNotes: ". . . . . . ."
+                       }
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        assert.strictEqual(JSON.parse(res.body), result, 'The JSON must be valid')
+                        done()
+                    })
+            })
+        })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+         suite('PUT /updateReview', () => {
+            test('Testing the updateReview endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .put('/updateReview/kdkjajdkaj')
+                    .type('form')
+                    .send({
+                        comment: "very good"
+                       })
+                    .end((err,res) => {
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        assert.strictEqual(res.text, `The document with reviewId 'kdkjajdkaj' updated successfully`)
+                        done()
+                    })
+            })
+        })
+
     })
 })
