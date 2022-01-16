@@ -79,12 +79,32 @@ exports.getReservationsByMonth = (req, res) => {}
  * @param {*} res 
  */
 exports.getNumberOfCustomersByNationality = (req, res) => {
-db
+db 
 .collection("customer")
 .get()
 .then((data) => {
     let customer = data.docs.map(d => d.data())
-    return res.json(customer)
+    return customer
+})
+.then ((data) => {
+    let nationalities = []
+    data.map(d => {
+        nationalities.push(d.nationality)
+    })
+    nationalities = [...new Set(nationalities)]
+    let customerByNationality = []
+    nationalities.map(n => {
+       let people = data.filter(d => d.nationality === n)
+        .length
+        customerByNationality.push({
+            people,
+            nationality: n
+        })
+    }) 
+    return customerByNationality
+})
+.then ((data) => {
+    return res.json(data)
 })
 .catch(err => {
     console.error(err)
