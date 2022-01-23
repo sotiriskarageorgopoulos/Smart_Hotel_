@@ -72,20 +72,20 @@ exports.login = (req, res) => {
  */
 //Receptionist,Admin
 exports.getRooms = (req, res) => {
-db
-.collection('room')
-.orderBy('availability')
-.get()
-.then((data) => {
-    let room = data.docs.map(d => d.data())
-    return res.json(room)
-})
-.catch(err => {
-    console.error(err)
-    return res.status(500).json("Something went wrong...")
-})
+    db
+        .collection('room')
+        .orderBy('availability')
+        .get()
+        .then((data) => {
+            let room = data.docs.map(d => d.data())
+            return res.json(room)
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
 }
-    
+
 /**
  * @author Venetia Tassou
  * @param {*} req 
@@ -94,20 +94,20 @@ db
 //Receptionist,Admin
 exports.getRoom = (req, res) => {
     let roomId = req.params.roomId
-  
+
     db
-    .collection("room")
-    .where("roomId","==",roomId)
-    .limit(1)
-    .get()
-    .then((data) => {
-        return res.json(data.docs[0].data())
-    })
-    .catch(err => {
-        console.error(err)
-        return res.status(500).send("Something went wrong...")
-    })
-  }
+        .collection("room")
+        .where("roomId", "==", roomId)
+        .limit(1)
+        .get()
+        .then((data) => {
+            return res.json(data.docs[0].data())
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
+}
 
 /**
  * @author Dimitris Giannopoulos 
@@ -115,19 +115,19 @@ exports.getRoom = (req, res) => {
  * @param {*} res 
  */
 //Customer,Receptionist,Admin
-exports.getAvailableRooms = (req, res) => {//ok
+exports.getAvailableRooms = (req, res) => { //ok
     db
-    .collection("room")
-    .where("availability","==",true)
-    .get()
-    .then((data) => {
-        let rooms = data.docs.map(d => d.data())
-        return res.json(rooms)
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).json("Something went wrong...")
-    })
+        .collection("room")
+        .where("availability", "==", true)
+        .get()
+        .then((data) => {
+            let rooms = data.docs.map(d => d.data())
+            return res.json(rooms)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
 }
 
 /**
@@ -136,19 +136,19 @@ exports.getAvailableRooms = (req, res) => {//ok
  * @param {*} res 
  */
 //Customer,Admin
-exports.getReviews = (req, res) => {//ok
+exports.getReviews = (req, res) => { //ok
     db
-    .collection("review")
-    .orderBy("date","desc")
-    .get()
-    .then((data) => {
-        let reviews = data.docs.map(d => d.data())
-        return res.json(reviews)
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).json("Something went wrong...")
-    })
+        .collection("review")
+        .orderBy("date", "desc")
+        .get()
+        .then((data) => {
+            let reviews = data.docs.map(d => d.data())
+            return res.json(reviews)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
 }
 
 /**
@@ -157,20 +157,20 @@ exports.getReviews = (req, res) => {//ok
  * @param {*} res 
  */
 //Customer,Admin
-exports.getReview = (req, res) => {//ok
+exports.getReview = (req, res) => { //ok
     let reviewId = req.params.revId
 
     db
-    .collection("review")
-    .where("reviewId","==",reviewId)
-    .get()
-    .then((data) => {
-        return res.json(data.docs[0].data())
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).send("Something went wrong!")
-    })
+        .collection("review")
+        .where("reviewId", "==", reviewId)
+        .get()
+        .then((data) => {
+            return res.json(data.docs[0].data())
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong!")
+        })
 
 }
 
@@ -180,8 +180,23 @@ exports.getReview = (req, res) => {//ok
  * @param {*} res 
  */
 //Customer,Receptionist,Admin
-exports.getRoomsByCategory = (req, res) => {
-
+exports.getRoomsByType = (req, res) => {
+    let type = req.params.type
+  
+    db
+    .collection("room")
+    .where("type","==",type)
+    .get()
+     .then(data=> {
+        return data.docs.map(d=> d.data())
+     })
+     .then(data => {
+         return res.json(data)
+     })
+     .catch(err => {
+        console.error(err)
+        return res.status(500).send("Something went wrong")
+    })
 }
 
 /**
@@ -191,9 +206,21 @@ exports.getRoomsByCategory = (req, res) => {
  */
 //Customer,Receptionist,Admin
 exports.getRoomsUntilPrice = (req, res) => {
+    let price = req.params.price
+        db
+        .collection("room")
+        .where("price","<=",Number(price))
+            .get()
+            .then((data) => {
+             return res.json(data.docs.map(d => d.data()))
+            })
+            .catch(err => {
+                    console.error(err)
+                    return res.status(500).json("Something went wrong...")
+        })
+    }
 
-}
-const Message = require('../model/message')
+
 /**
  * @author Venetia Tassou
  * @param {*} req 
@@ -201,23 +228,30 @@ const Message = require('../model/message')
  */
 //Customer,Receptionist,Admin
 exports.sendMessage = (req, res) => {
-    let {senderId, receiverId, susbject, text, date, isRead} = req.body
+    let {
+        senderId,
+        receiverId,
+        susbject,
+        text,
+        date,
+        isRead
+    } = req.body
 
     let message = new Message(senderId, receiverId, susbject, text, date, isRead)
 
-    if(Object.keys(message).length == 0) {
+    if (Object.keys(message).length == 0) {
         return res.status(400).send("Malformed request!")
-    } 
+    }
     db
-    .collection("message")
-    .add(JSON.parse(JSON.stringify(message)))
-    .then (() => {
-        return res.send(`The message send by ${senderId}`)
-    })
-    .catch(err => {
-        console.error(err)
-        res.status(500).send('Something went wrong...')
-    })
+        .collection("message")
+        .add(JSON.parse(JSON.stringify(message)))
+        .then(() => {
+            return res.send(`The message send by ${senderId}`)
+        })
+        .catch(err => {
+            console.error(err)
+            res.status(500).send('Something went wrong...')
+        })
 }
 
 /**
@@ -229,22 +263,22 @@ exports.sendMessage = (req, res) => {
 exports.getMessages = (req, res) => {
 
     let receiverId = req.params.receiverId
-  
+
     db
-    .collection("message")
-    .where("receiverId","==",receiverId)
-    .get()
-    .then((data) => {
-        let messages = []
-        data.docs.map(d => {
-            messages.push(d.data())
+        .collection("message")
+        .where("receiverId", "==", receiverId)
+        .get()
+        .then((data) => {
+            let messages = []
+            data.docs.map(d => {
+                messages.push(d.data())
+            })
+            return res.json(messages)
         })
-        return res.json(messages)
-    })
-    .catch(err => {
-        console.error(err)
-        return res.status(500).send("Something went wrong...")
-    })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
 }
 
 /**
@@ -263,6 +297,73 @@ exports.getMessage = (req, res) => {
  */
 //Customer,Receptionist,Admin
 exports.updateProfileDetails = (req, res) => {
+    let userId = req.params.userId
+    let updOject = req.body
+    if (Object.keys(updOject).length == 0) {
+        return res.status(400).send("Malformed request!")
+    }
+
+    db
+        .collection("customer")
+        .where("userId", "==", userId)
+        .limit(1)
+        .get()
+        .then((data) => {
+            if (data.docs.length > 0) {
+                data.docs.map(d => {
+                    d.ref.update(updOject)
+                })
+                return res.send(`The profile with id: ${userId} has been updated`)
+            }
+            return data
+        })
+        .then(() => {
+            db
+                .collection("receptionist")
+                .where("userId", "==", userId)
+                .limit(1)
+                .get()
+                .then((data) => {
+                    if (data.docs.length > 0) {
+                        data.docs.map(d => {
+                            d.ref.update(updOject)
+
+                        })
+                        return res.send(`The profile with id: ${userId} has been updated`)
+                    }
+                    return data
+                })
+                .then(() => {
+                    db
+                        .collection("administrator")
+                        .where("userId", "==", userId)
+                        .limit(1)
+                        .get()
+                        .then((data) => {
+                            if (data.docs.length > 0) {
+                                data.docs.map(d => {
+                                    d.ref.update(updOject)
+                                })
+                                return res.send(`The profile with id: ${userId} has been updated`)
+                                
+                            }
+                            return res.status(404).send("Documents not found")   
+                        })
+                        .catch(err => {
+                            console.error(err)
+                            return res.status(500).send("Something went wrong...")
+                        })
+                })
+                .catch(err => {
+                    console.error(err)
+                    return res.status(500).send("Something went wrong...")
+                })
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
+
 
 }
 
@@ -272,29 +373,31 @@ exports.updateProfileDetails = (req, res) => {
  * @param {*} res 
  */
 //Customer,Admin
-exports.deleteReview = (req, res) => {//ok
-    let {revId} = req.params
+exports.deleteReview = (req, res) => { //ok
+    let {
+        revId
+    } = req.params
 
     db
-    .collection("review")
-    .where("reviewId","==",revId)
-    .get()
-    .then((data) => {
-        if(data.docs.length == 0) {
-            return res.status(404).send("Documents not found")
-        }
-        data.docs.map(doc => {
-            doc.ref.delete()
+        .collection("review")
+        .where("reviewId", "==", revId)
+        .get()
+        .then((data) => {
+            if (data.docs.length == 0) {
+                return res.status(404).send("Documents not found")
+            }
+            data.docs.map(doc => {
+                doc.ref.delete()
+            })
+            return data
         })
-        return data
-    })
-    .then(() => {
-        return res.send(`The review with id ${revId} deleted successfully!`)
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).send("Something went wrong!")
-    })
+        .then(() => {
+            return res.send(`The review with id ${revId} deleted successfully!`)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong!")
+        })
 }
 
 /**
@@ -303,31 +406,33 @@ exports.deleteReview = (req, res) => {//ok
  * @param {*} res 
  */
 //Receptionist,Admin
-exports.updateReservationDecision = (req, res) => {//problem
-    let {resId} = req.params
+exports.updateReservationDecision = (req, res) => { //problem
+    let {
+        resId
+    } = req.params
     let updateObj = req.body
 
-    if(Object.keys(updateObj).length == 0) {
+    if (Object.keys(updateObj).length == 0) {
         return res.status(400).send("Malformed request!")
     }
 
     db
-    .collection("reservation")
-    .where("reservationId","==",resId)
-    .get()
-    .then((data) => {
-        if(data.docs.length == 0) {
-            return res.status(404).send("Documents not found")
-        }
-        data.docs.map(d => {
-            d.ref.update(updateObj)
+        .collection("reservation")
+        .where("reservationId", "==", resId)
+        .get()
+        .then((data) => {
+            if (data.docs.length == 0) {
+                return res.status(404).send("Documents not found")
+            }
+            data.docs.map(d => {
+                d.ref.update(updateObj)
+            })
+            return res.send(`Reservation with id ${resId} updated succesfully`)
         })
-        return res.send(`Reservation with id ${resId} updated succesfully`)
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).send("Something went wrong")
-    })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
 
 
 }
@@ -338,17 +443,45 @@ exports.updateReservationDecision = (req, res) => {//problem
  * @param {*} res 
  */
 //Receptionist,Admin
-exports.getBlackListedCustomer = (req, res) => {
- 
+exports.getCustomer = (req, res) => {
+    let userId = req.params.userId
+    db
+    .collection("customer")
+    .where("userId","==",userId)
+    .get()
+    .then((data) =>{
+     if (data.docs.length === 0) {
+         return res.status(404).send("Documents not found")
+    }
+    return res.json(data.docs[0].data())
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong")
+    })
 }
+
+
 
 /**
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ */ //ok
 //Receptionist,Admin
 exports.getAllReservationsOfHotel = (req, res) => {
+    db
+        .collection("reservation")
+        .orderBy("resDate", "desc")
+        .get()
+        .then((data) => {
+            let reservations = data.docs.map(d => d.data())
+            return res.json(reservations)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
 
 }
 
@@ -356,8 +489,24 @@ exports.getAllReservationsOfHotel = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ */ //ok
 //Receptionist,Admin
 exports.getReservationOfHotel = (req, res) => {
+    let resId = req.params.resId
+
+    db
+        .collection("reservation")
+        .where("reservationId", "==", resId)
+        .get()
+        .then((data) => {
+            if (data.docs.length == 0) {
+                return res.send('The reservation does not exist')
+            }
+            return res.json(data.docs[0].data())
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
 
 }

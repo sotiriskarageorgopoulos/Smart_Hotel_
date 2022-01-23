@@ -15,8 +15,7 @@ const {
 } = require('../util/helper_functions')
 
 const Review = require('../model/review')
-
-
+const Reservation = require('../model/reservation')
 /**
  * @author Sotiris Karageorgopoulos <sotiriskarageorgopoulos@gmail.com>
  * @param {*} req 
@@ -116,18 +115,84 @@ exports.register = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ */ //ok
 exports.doReservation = (req, res) => {
+    let {
+        reservationId,
+        roomsIds,
+        resDate,
+        duration,
+        customerNotes,
+        userId,
+        decision,
+    } = req.body
+    const reservation = new Reservation(reservationId, roomsIds, resDate, duration, customerNotes, userId, decision, 0)
 
+    if (Object.keys(reservation).length === 0) {
+        res.status(400).send('There is no Reservation to commit')
+    }
+    let roomsPrice = 0
+    let totalPrice = 0
+    roomsIds.map((rId, index) => {
+        db
+            .collection("room")
+            .where("roomId", "==", rId)
+            .get()
+            .then((data) => {
+                roomsPrice += data.docs[0].data().price
+                return roomsPrice
+            })
+            .then((roomsPrice) => {
+                totalPrice = duration * roomsPrice
+                reservation.setTotalPrice = totalPrice
+                if (roomsIds.length -1 === index) {
+                    db
+                        .collection("reservation")
+                        .add(JSON.parse(JSON.stringify(reservation)))
+                        .then(() => {
+                            res.send(`The Reservation with ID: '${reservationId}' is commited succesfully!`)
+                        })
+                        .catch((err) => {
+                            console.error(err)
+                            res.status(500).json("Something went wrong!")
+                        })
+                }
+            })
+            .catch((err) => {
+                console.error(err)
+                return res.status(500).send("Something went wrong")
+            })
+    })
 }
 
 /**
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */
+ */ //ok
 exports.cancelReservation = (req, res) => {
+    let resId = req.params.resId;
 
+    db
+        .collection("reservation")
+        .where("reservationId", "==", resId)
+        .get()
+        .then((data) => {
+            if (data.docs.length == 0) {
+                return res.status(404).send("Documents not found")
+            }
+            data.docs.map(doc => {
+                doc.ref.delete()
+            })
+            return data
+        })
+        .then(() => {
+            return res.send(`Reservation with id: ${resId} deleted successfully!`)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong!")
+        })
 }
 
 /**
@@ -137,24 +202,30 @@ exports.cancelReservation = (req, res) => {
  * Παραδειγμα
  */
 exports.postReview = (req, res) => {
-    let {reviewId, userId, comment, date, rating} = req.body
+    let {
+        reviewId,
+        userId,
+        comment,
+        date,
+        rating
+    } = req.body
 
     let review = new Review(reviewId, userId, comment, date, rating)
 
-    if(Object.keys(review).length === 0) {
+    if (Object.keys(review).length === 0) {
         res.status(400).send('There is no review to add!')
     }
 
     db
-      .collection("review")
-      .add(JSON.parse(JSON.stringify(review)))
-      .then(() => {
-          res.send(`The review with reviewId '${reviewId}' is added to collection!`)
-      })
-      .catch((err) => {
-          console.error(err)
-          res.status(500).json("Something went wrong!")
-      })
+        .collection("review")
+        .add(JSON.parse(JSON.stringify(review)))
+        .then(() => {
+            res.send(`The review with reviewId '${reviewId}' is added to collection!`)
+        })
+        .catch((err) => {
+            console.error(err)
+            res.status(500).json("Something went wrong!")
+        })
 }
 
 /**
@@ -162,34 +233,36 @@ exports.postReview = (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
-exports.updateReview = (req, res) => {  //problem
-    let {revId} = req.params
+exports.updateReview = (req, res) => { //problem
+    let {
+        revId
+    } = req.params
     let updateReviewObj = req.body
 
-    if(Object.keys(updateReviewObj).length === 0) {
+    if (Object.keys(updateReviewObj).length === 0) {
         return res.status(400).json("Bad Request")
     }
 
     db
-    .collection("review")
-    .where("reviewId","==",revId)
-    .get()
-    .then((data) => {
-        if(data.docs.length == 0) {
-            return res.status(404).send("Documents not found")
-        }
-        data.docs.map(doc => {
-            doc.ref.update(updateReviewObj)
+        .collection("review")
+        .where("reviewId", "==", revId)
+        .get()
+        .then((data) => {
+            if (data.docs.length == 0) {
+                return res.status(404).send("Documents not found")
+            }
+            data.docs.map(doc => {
+                doc.ref.update(updateReviewObj)
+            })
+            return data
         })
-        return data
-    })
-    .then(() => {
-        return res.send(`The document with id ${revId} updated successfully`)
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).send("Something went wrong")
-    })
+        .then(() => {
+            return res.send(`The document with id ${revId} updated successfully`)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
 }
 
 /**
@@ -197,22 +270,22 @@ exports.updateReview = (req, res) => {  //problem
  * @param {*} req 
  * @param {*} res 
  */
-exports.getReservationsOfCustomer = (req, res) => {//went wrong
+exports.getReservationsOfCustomer = (req, res) => { //went wrong
     let userId = req.params.userId
 
     db
-    .collection("reservation")
-    .where("userId","==",userId)
-    .orderBy("resDate","desc")
-    .get()
-    .then((data) => {
-        let reservations = data.docs.map(d => d.data())
-        return res.json(reservations)
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).json("Something went wrong...")
-    })
+        .collection("reservation")
+        .where("userId", "==", userId)
+        .orderBy("resDate", "desc")
+        .get()
+        .then((data) => {
+            let reservations = data.docs.map(d => d.data())
+            return res.json(reservations)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
 }
 
 /**
@@ -220,22 +293,22 @@ exports.getReservationsOfCustomer = (req, res) => {//went wrong
  * @param {*} req 
  * @param {*} res 
  */
-exports.getReservationOfCustomer = (req, res) => {//ok
+exports.getReservationOfCustomer = (req, res) => { //ok
     let reservationId = req.params.resId
     let userId = req.params.userId
 
     db
-    .collection("reservation")
-    .where("userId","==",userId)
-    .where("reservationId","==",reservationId)
-    .get()
-    .then((data) => {
-        return res.json(data.docs[0].data())
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).send("Something went wrong!")
-    })
+        .collection("reservation")
+        .where("userId", "==", userId)
+        .where("reservationId", "==", reservationId)
+        .get()
+        .then((data) => {
+            return res.json(data.docs[0].data())
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong!")
+        })
 }
 
 /**
@@ -267,7 +340,9 @@ exports.updateCustomerBonus = (req, res) => {
     let {
         userId
     } = req.params
-    let { bonusPoints } = req.body
+    let {
+        bonusPoints
+    } = req.body
     db
         .collection("customer")
         .where('userId', '==', userId)
