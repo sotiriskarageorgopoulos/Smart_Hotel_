@@ -187,7 +187,7 @@ exports.deleteRoom = (req, res) => {
         return data
     })
     .then(() => {
-        return res.send(`The room with roomId ${roomId} is deleted successfully!`)
+        return res.send(`The room with roomId ${roomId} was deleted successfully!`)
     })
     .catch(() => {
         return res.status(500).send("Something went wrong...")

@@ -108,4 +108,65 @@ suite('Users handler testing...', () => {
 
         
     })
+     /**
+     * @author George Koulos
+     */
+      suite('GET/getRoomsByType', () => {
+        test('Testing getRoomsByType endpoint', (done) => {
+            chai
+                .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                .get('/api/getRoomsByType/double')
+                .type('form')
+                .end((err, res) => {
+                    assert.equal(res.status, 200, 'Response status should be 200...')
+                    assert.isAtLeast(res.body.length, 1)
+                    done()
+                })
+        })
+    })
+        /**
+     * @author George Koulos
+     */
+         suite('GET/getRoomsUntilPrice', () => {
+            test('Testing getRoomsUntilPrice endpoint', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                    .get('/api/getRoomsUntilPrice/70')
+                    .type('form')
+                    .end((err, res) => {
+                        assert.equal(res.status, 200, 'Response status should be 200...')
+                        assert.isAtLeast(res.body.length, 1)
+                        done()
+                    })
+            })
+        })
+          /**
+     * @author George Koulos
+     */
+           suite('GET/getCustomer', () => {
+            test('Testing getCustomer endpoint', (done) => {
+            let customer = {
+                    "birthDate": "1948-06-07T00:00:00.000Z",
+                    "password": "123456",
+                    "userId": "ZYioRvOtwNRDzX9DFlgS8WiCKHy1",
+                    "bonusPoints": 0,
+                    "name": "Hlias",
+                    "blackListed": false,
+                    "image": "https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/no-img.png?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609",
+                    "surname": "Panagoulis",
+                    "nationality": "Greece",
+                    "email": "panago@gmail.com",
+                    "tel": "2105656233"
+                }
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                    .get('/api/getCustomer/ZYioRvOtwNRDzX9DFlgS8WiCKHy1')
+                    .type('form')
+                    .end((err, res) => {
+                        assert.equal(res.status, 200, 'Response status should be 200...')
+                        assert.deepEqual(res.body, customer)
+                        done()
+                    })
+            })
+        })    
 })
