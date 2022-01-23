@@ -7,7 +7,7 @@ const app = express();
 const {
     login,
     getAvailableRooms,
-    getRoomsByCategory,
+    getRoomsByType,
     getRooms,
     getRoom,
     getRoomsUntilPrice,
@@ -16,7 +16,7 @@ const {
     updateProfileDetails,
     deleteReview,
     updateReservationDecision,
-    getBlackListedCustomer,
+    getCustomer,
     getAllReservationsOfHotel,
     getReservationOfHotel,
     getReviews,
@@ -53,7 +53,7 @@ const {
 } = require("./handlers/administrator")
 
 const { 
-    getReservationsByDay,
+    getReservationsByDate,
     getIncomeByDay,
     getRoomWithMaxReservations,
     getReservationsByMonth,
@@ -62,7 +62,7 @@ const {
 } = require("./handlers/statistics")
 
 //statistics routes
-app.get("/reservationsByDay",getReservationsByDay)
+app.get("/reservationsByDate",getReservationsByDate)
 app.get("/incomeByDay",getIncomeByDay)
 app.get("/roomWithMaxReservations",getRoomWithMaxReservations)
 app.get("/reservationsByMonth",getReservationsByMonth)
@@ -75,7 +75,7 @@ app.put('/updateRoomPriceWithDiscount/:roomId',updateRoomPriceWithDiscount)
 app.put('/upgradeRoomReservation/:reservationId',upgradeRoomReservation)
 app.put('/doUnavailableRoom/:roomId',doUnavailableRoom)
 app.post('/room',postRoom)
-app.post('/deleteRoom/:roomId',deleteRoom)
+app.delete('/deleteRoom/:roomId',deleteRoom)
 app.put('/updateRoomDetails/:roomId',updateRoomDetails)
 app.put('/postBlacklistedCustomer/:userId',postBlacklistedCustomer)
 app.put('/removeBlacklistedCustomer/:userId',removeBlacklistedCustomer)
@@ -89,10 +89,10 @@ app.get('/rooms',getRooms)
 app.get('/room/:roomId',getRoom)
 app.get('/reviews',getReviews)
 app.get('/review/:revId',getReview)
-app.get('/getBlackListedCustomer/:userId',getBlackListedCustomer)
+app.get('/getCustomer/:userId',getCustomer)
 app.get('/getAllReservationsOfHotel',getAllReservationsOfHotel)
 app.get('/getReservationOfHotel/:resId',getReservationOfHotel)
-app.get('/getRoomsByCategory/:category',getRoomsByCategory)
+app.get('/getRoomsByType/:type',getRoomsByType)
 app.get('/getRoomsUntilPrice/:price',getRoomsUntilPrice)
 app.post('/sendMessage',sendMessage)
 app.put('/updateReservationDecision/:resId',updateReservationDecision)
