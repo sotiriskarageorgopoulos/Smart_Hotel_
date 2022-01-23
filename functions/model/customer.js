@@ -1,6 +1,4 @@
-const {
-    User
-} = require('./user')
+const User = require('./user')
 
 class Customer extends User {
     constructor(userId, name, surname, birthDate, email, tel, password, image, nationality, bonusPoints, blackListed) {

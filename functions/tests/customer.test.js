@@ -3,6 +3,8 @@ const assert = chai.assert
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp)
 
+
+
 const {
     validateRegisterData
 } = require('../util/helper_functions')
@@ -243,5 +245,22 @@ suite('Customer handler testing...', () => {
                     })
             })
         })
+        /**
+         * @author Tassou Venetia
+         */
+         suite('Testing get customer bonus..', () => {
+            test('test get customer bonus', (done) => {
+                chai
+                    .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
+                    .get(`/getCustomerBonus/Ho9Am9N4VEdlwhlrpuZibUqlgg33`)
+                    .end((err, res) => {
+                        assert.equal(res.statusCode, 200, "response must be 200")
+                        assert.strictEqual(res.text,'0')
+                        done()
+                    })
+
+            })
+         })
+
     })
 })
