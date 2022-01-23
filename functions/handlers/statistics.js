@@ -8,14 +8,15 @@ const {
  * @param {*} req 
  * @param {*} res 
  */
-exports.getReservationsByDay = (req, res) => {}
+exports.getReservationsByDay = (req, res) => {
+}
 
 /**
  * @author Dimitris Giannopoulos
  * @param {*} req 
  * @param {*} res 
  */
-exports.getIncomeByDay = (req, res) => {
+exports.getIncomeByDate = (req, res) => {
     db
         .collection("reservation")
         .get()

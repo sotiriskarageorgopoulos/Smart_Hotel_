@@ -54,7 +54,7 @@ const {
 
 const { 
     getReservationsByDay,
-    getIncomeByDay,
+    getIncomeByDate,
     getRoomWithMaxReservations,
     getReservationsByMonth,
     getNumberOfCustomersByNationality,
@@ -63,7 +63,7 @@ const {
 
 //statistics routes
 app.get("/reservationsByDay",getReservationsByDay)
-app.get("/incomeByDay",getIncomeByDay)
+app.get("/incomeByDate",getIncomeByDate)
 app.get("/roomWithMaxReservations",getRoomWithMaxReservations)
 app.get("/reservationsByMonth",getReservationsByMonth)
 app.get("/numberOfCustomersByNationality",getNumberOfCustomersByNationality)

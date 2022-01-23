@@ -195,7 +195,7 @@ suite('Customer handler testing...', () => {
     /**
      * @author Sotiris Karageorgopoulos <sotiriskarageorgopoulos@gmail.com> 
      */
-    suite('Functional Tests', () => {
+     suite('Functional Tests', () => {
         suite('POST /register', () => {
             test('Testing register endpoint...', (done) => {
                 chai
@@ -251,30 +251,9 @@ suite('Customer handler testing...', () => {
                 chai
                     .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
                     .get('/reservations/zTJyKwYSMEelU24s19b58BuJoAd2')
-                    .type('form')
                     .end((err, res) => {
-                       let result = [{
-                        totalPrice: "100",
-                        reservationId: "sjfjsfs",
-                        decision: "accepted",
-                        roomsIds: ["301"],
-                        duration: "1",
-                        userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
-                        resDate: "2022-01-02T10:00:00Z",
-                        customerNotes: "kfkjs"
-                       },
-                       {
-                       totalPrice: "150",
-                       reservationId: "res229",
-                       decision: "accepted",
-                       roomsIds: ["65"],
-                       duration: "2",
-                       userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
-                       resDate: "2022-01-13T09:15:00Z",
-                       customerNotes: ". . . . . . ."
-                       }]
                         assert.equal(res.status,200,'Response status should be 200...')
-                        assert.strictEqual(JSON.parse(res.body), result, 'The JSON must be valid')
+                        assert.isAtLeast(res.body.length, 1, 'Must return at least') 
                         done()
                     })
             })
@@ -283,24 +262,27 @@ suite('Customer handler testing...', () => {
          * @author Dimitris Giannopoulos
          */
         suite('GET /reservation', () => {
-            test('Testing the getReservationOfCustomer endpoint...', (done) => {
+            test('Testing the getReservationOfCustomer endpoint...', (done) => { 
                 chai
                     .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
-                    .get('/reservation/res229/zTJyKwYSMEelU24s19b58BuJoAd2')
-                    .type('form')
+                    .get('/reservation/ghhghfhf/4Gl0MdkcPuS7F9GgfiRXldVtNUt1')
                     .end((err, res) => {
                        let result = {
-                        totalPrice: "150",
-                        reservationId: "res229",
-                        decision: "accepted",
-                        roomsIds: ["65"],
-                        duration: "2",
-                        userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
-                        resDate: "2022-01-13T09:15:00Z",
-                        customerNotes: ". . . . . . ."
+                            duration: 2,
+                            userId: "4Gl0MdkcPuS7F9GgfiRXldVtNUt1",
+                            roomsIds: ["102"],
+                            decision: "accepted",
+                            reservationId: "ghhghfhf",
+                            resDate: {
+                                "_seconds": 1641636000,
+                                "_nanoseconds": 0
+                            },
+                            totalPrice: 343,
+                            customerNotes: "sdfgsfdg"
                        }
                         assert.equal(res.status,200,'Response status should be 200...')
-                        assert.strictEqual(JSON.parse(res.body), result, 'The JSON must be valid')
+                        assert.deepEqual(res.body, result, 'The JSON must be valid')
+                        //assert.equal(res.body.length, 1, 'Must return one document') 
                         done()
                     })
             })
@@ -312,14 +294,14 @@ suite('Customer handler testing...', () => {
             test('Testing the updateReview endpoint...', (done) => {
                 chai
                     .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
-                    .put('/updateReview/kdkjajdkaj')
+                    .put('/updateReview/hgjhghj')
                     .type('form')
                     .send({
                         comment: "very good"
                        })
                     .end((err,res) => {
                         assert.equal(res.status,200,'Response status should be 200...')
-                        assert.strictEqual(res.text, `The document with reviewId 'kdkjajdkaj' updated successfully`)
+                        assert.strictEqual(res.text, `The document with id hgjhghj updated successfully`)
                         done()
                     })
             })

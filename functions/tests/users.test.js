@@ -109,18 +109,84 @@ suite('Users handler testing...', () => {
          * @author Dimitris Giannopoulos
          */
          suite('DELETE /deleteReview', () => {
-            test('Testing delete endpoint...', (done) => {
+            test('Testing deleteReview endpoint...', (done) => {
                 chai
                     .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
-                    .delete('/deleteReview/ghhghfhf')
+                    .delete('/deleteReview/jdndnj')
                     .end((err,res) => {
-                        assert.equal(res.status,200,'Response status should be 200...')
-                        assert.strictEqual(res.text, `The document with reviewId 'ghhghfhf' deleted successfully`)
+                        assert.equal(res.status, 200,'Response status should be 200...')
+                        assert.strictEqual(res.text, `The review with id jdndnj deleted successfully!`)
                         done()
                     })
             })
         })
-
-        
+        /**
+         * @author Dimitris Giannopoulos
+         */
+         suite('GET /availableRooms', () => {
+            test('Testing the getAvailableRooms endpoint...', (done) => { 
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .get('/availableRooms')
+                    .end((err, res) => {
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        done()
+                    })
+            })
+        })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+         suite('GET /reviews', () => {
+            test('Testing the getReviews endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .get('/reviews')
+                    .end((err, res) => {
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        done()
+                    })
+            })
+        })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+         suite('GET /review', () => {
+            test('Testing the getReview endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .get('/review/hgjhghj')
+                    .end((err, res) => {
+                        let result = {
+                            reviewId: "hgjhghj",
+                            userId: "hggh",
+                            rating: 3,
+                            comment: "very good",
+                            date: "2022-01-12T16:37:00Z"
+                        }
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        done()
+                    })
+            })
+        })
+        /**
+         * @author Dimitris Giannopoulos
+         */
+         suite('PUT /updateReservationDecision', () => {
+            test('Testing the updateReservationDecision endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .put('/updateReservationDecision/res229')
+                    .type('form')
+                    .send({
+                        decision: "rejected"
+                       })
+                    .end((err,res) => {
+                        assert.equal(res.status,200,'Response status should be 200...')
+                        assert.strictEqual(res.text, `Reservation with id res229 updated succesfully`)
+                        done()
+                    })
+            })
+        })
     })
 })
