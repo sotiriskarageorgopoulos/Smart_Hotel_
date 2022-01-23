@@ -230,18 +230,60 @@ suite('Customer handler testing...', () => {
                     .post('/postReview')
                     .type('form')
                     .send({
-                        userId:"zTJyKwYSMEelU24s19b58BuJoAd2",
-                        reviewId:"jdndnj",
-                        rating:"5",
-                        date:"2022-01-15T11:30:46Z",
-                        comment:"csnjncsjnc csjnncsjncsnj scnjjcnsnjsc njcsjncsjn csnjcnsjn scjncnjsjn ncjsn"
+                        userId: "zTJyKwYSMEelU24s19b58BuJoAd2",
+                        reviewId: "jdndnj",
+                        rating: "5",
+                        date: "2022-01-15T11:30:46Z",
+                        comment: "csnjncsjnc csjnncsjncsnj scnjjcnsnjsc njcsjncsjn csnjcnsjn scjncnjsjn ncjsn"
                     })
-                    .end((err,res) => {
-                        assert.equal(res.status,200,'Response status should be 200...')
-                        assert.strictEqual(res.text,`The review with reviewId 'jdndnj' is added to collection!`)
+                    .end((err, res) => {
+                        assert.equal(res.status, 200, 'Response status should be 200...')
+                        assert.strictEqual(res.text, `The review with reviewId 'jdndnj' is added to collection!`)
                         done()
                     })
             })
         })
+        /**
+         * @author Dimitris Michailidis <dimmichlds@gmail.com>
+         */
+        suite('POST /doReservation', () => {
+            test('Testing the doReservation endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .post('/doReservation/')
+                    .type('form')
+                    .send({
+                        customerNotes: "Take me from airport",
+                        decision: "pending",
+                        duration: 3,
+                        resDate: "2022-06-03T08:48:54.932Z",
+                        reservationId: "12oA12LKaw",
+                        roomsIds: ["102", "301"],
+                        userId: "ZYioRvOtwNRDzX9DFlgS8WiCKHy1"
+                    })
+                    .end((err, res) => {
+                        assert.equal(res.status, 200, 'Response status should be 200...')
+                        assert.strictEqual(res.text, `The Reservation with ID: '12oA12LKaw' is commited succesfully!`)
+                        done()
+                    })
+            })
+        })
+        /**
+         * @author Dimitris Michailidis <dimmichlds@gmail.com>
+         */
+        suite('DELETE /cancelReservation', () => {
+            test('Testing the cancelReservatio endpoint...', (done) => {
+                chai
+                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                    .delete('/cancelReservation/12oA12LKaw')
+                    .type('form')
+                    .end((err, res) => {
+                        assert.equal(res.status, 200, 'Response status should be 200...')
+                        assert.strictEqual(res.text, `Reservation with id: 12oA12LKaw deleted successfully!`)
+                        done()
+                    })
+            })
+        })
+
     })
 })

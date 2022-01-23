@@ -46,7 +46,7 @@ exports.upgradeRoomReservation = (req, res) => {
         .get()
         .then((data) => {
             if(data.docs.length === 0){
-                return res.status(404).send("Documents not found")
+                return res.status(404).send("Reservation not found")
             }
             data.docs.map((doc) => {
                 doc.ref.update({roomsIds})

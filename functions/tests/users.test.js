@@ -85,7 +85,7 @@ suite('Users handler testing...', () => {
     })
 
     suite('Functional Tests', () => {
-         /**
+        /**
          * @author Sotiris Karageorgopoulos <sotiriskarageorgopoulos@gmail.com> 
          */
         suite('POST /login', () => {
@@ -106,6 +106,76 @@ suite('Users handler testing...', () => {
             })
         })
 
-        
+
+    })
+    /**
+     * @author Dimitris Michailidis <dimmichlds@gmail.com>
+     */
+    suite('GET/AllReservations', () => {
+        test('Testing getAllReservationsOfHotel endpoint', (done) => {
+            chai
+                .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                .get('/api/getAllReservationsOfHotel')
+                .type('form')
+
+                .end((err, res) => {
+                    let result = {
+
+                        duration: 2,
+                        decision: "accepted",
+                        totalPrice: 180,
+                        reservationId: "res2034",
+                        userId: "c0LnmM8mxoYMM33Q7Kn6IssD16k2",
+                        customerNotes: "something. . .",
+                        roomsIds: ["101"]
+                    }
+                    assert.equal(res.status, 200, 'Response status should be 200...')
+                    done()
+                })
+        })
+    })
+    /**
+     * @author Dimitris Michailidis <dimmichlds@gmail.com>
+     */
+    suite('GET/OneReservationOfHotel', () => {
+        test('Testing getReservationOfHotel endpoint', (done) => {
+            chai
+                .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                .get('/api/getReservationOfHotel/res2034')
+                .type('form')
+                .end((err, res) => {
+                    let result = {
+                        roomsIds: ["101"],
+                        userId: "c0LnmM8mxoYMM33Q7Kn6IssD16k2",
+                        reservationId: "res2034",
+                        decision: "accepted",
+                        duration: 2,
+                        totalPrice: 180,
+                        customerNotes: "something. . ."
+                    }
+                    assert.equal(res.status, 200, 'Response status should be 200...')
+                    done()
+                })
+        })
+    })
+    /**
+     * @author Dimitris Michailidis <dimmichlds@gmail.com>
+     */
+    suite('/PUT UpdateProfile', () => {
+        test('Testing updateProfileDetails endpoint...', (done) => {
+            let userId = 'ZYioRvOtwNRDzX9DFlgS8WiCKHy1'
+            chai
+                .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                .put('/api/updateProfileDetails/ZYioRvOtwNRDzX9DFlgS8WiCKHy1')
+                .type('form')
+                .send({
+                    tel: '2105656233'
+                })
+                .end((err, res) => {
+                    assert.equal(res.status, 200, 'Response status should be 200...')
+                    assert.strictEqual(res.text, 'The profile with id: ZYioRvOtwNRDzX9DFlgS8WiCKHy1 has been updated')
+                    done()
+                })
+        })
     })
 })
