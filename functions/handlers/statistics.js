@@ -44,7 +44,7 @@ exports.getReservationsByDate = (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
-exports.getIncomeByDay = (req, res) => {
+exports.getIncomeByDate = (req, res) => {
     db
         .collection("reservation")
         .get()

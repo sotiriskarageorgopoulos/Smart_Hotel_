@@ -42,6 +42,7 @@ class Reservation {
         return this.duration = duration
     }
 
+
     set setCustomerNotes(customerNotes) {
         this.customerNotes = customerNotes
     }

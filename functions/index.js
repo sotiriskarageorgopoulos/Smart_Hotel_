@@ -54,7 +54,7 @@ const {
 
 const { 
     getReservationsByDate,
-    getIncomeByDay,
+    getIncomeByDate,
     getRoomWithMaxReservations,
     getReservationsByMonth,
     getNumberOfCustomersByNationality,
@@ -63,7 +63,7 @@ const {
 
 //statistics routes
 app.get("/reservationsByDate",getReservationsByDate)
-app.get("/incomeByDay",getIncomeByDay)
+app.get("/incomeByDate",getIncomeByDate)
 app.get("/roomWithMaxReservations",getRoomWithMaxReservations)
 app.get("/reservationsByMonth",getReservationsByMonth)
 app.get("/numberOfCustomersByNationality",getNumberOfCustomersByNationality)
@@ -72,7 +72,7 @@ app.get("/mostDemandRooms/:number",getMostDemandRooms)
 //administrator routes
 app.put('/updateRoomPrice/:roomId',updateRoomPrice)
 app.put('/updateRoomPriceWithDiscount/:roomId',updateRoomPriceWithDiscount)
-app.put('/upgradeRoomReservation/:reservationId/:roomId',upgradeRoomReservation)
+app.put('/upgradeRoomReservation/:reservationId',upgradeRoomReservation)
 app.put('/doUnavailableRoom/:roomId',doUnavailableRoom)
 app.post('/room',postRoom)
 app.delete('/deleteRoom/:roomId',deleteRoom)
