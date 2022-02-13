@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 export const RoomType = Object.freeze({
     single_room: "single room",
     twin_room: "twin room",

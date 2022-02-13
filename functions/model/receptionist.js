@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 const User = require('./user')
 
 class Receptionist extends User {

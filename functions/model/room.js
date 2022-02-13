@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 class Room {
     constructor(roomId, type, description, services, capacity, size, availability, image, price) {
         this.roomId = roomId
@@ -6,7 +9,7 @@ class Room {
         this.services = services
         this.capacity = capacity
         this.size = size
-        this.availiability = availability
+        this.availability = availability
         this.image = image
         this.price = price
     }
@@ -59,7 +62,7 @@ class Room {
         this.availability = availability
     }
 
-    get getAvailiability() {
+    get getAvailability() {
         return this.availability
     }
 

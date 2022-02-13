@@ -88,14 +88,15 @@ exports.register = (req, res) => {
                 blackListed: false,
                 image: `https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/${noImg}?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609`
             }
-            return db
+            db
                 .collection("customer")
                 .add(customerCredentials)
-        })
-        .then(token => {
-            return res.status(201).json({
-                token
-            })
+                .then(() => {
+                    return res.status(201).json({
+                        token,
+                        ...customerCredentials
+                    })
+                })
         })
         .catch(err => {
             console.error(err)
@@ -115,7 +116,7 @@ exports.register = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */ //ok
+ */
 exports.doReservation = (req, res) => {
     let {
         reservationId,
@@ -123,45 +124,45 @@ exports.doReservation = (req, res) => {
         resDate,
         duration,
         customerNotes,
+        totalPrice,
         userId,
         decision,
     } = req.body
-    const reservation = new Reservation(reservationId, roomsIds, resDate, duration, customerNotes, userId, decision, 0)
+    const reservation = new Reservation(reservationId, roomsIds, resDate, +duration, customerNotes, userId, decision, +totalPrice)
 
     if (Object.keys(reservation).length === 0) {
         res.status(400).send('There is no Reservation to commit')
     }
-    let roomsPrice = 0
-    let totalPrice = 0
-    roomsIds.map((rId, index) => {
-        db
-            .collection("room")
-            .where("roomId", "==", rId)
-            .get()
-            .then((data) => {
-                roomsPrice += data.docs[0].data().price
-                return roomsPrice
-            })
-            .then((roomsPrice) => {
-                totalPrice = duration * roomsPrice
-                reservation.setTotalPrice = totalPrice
-                if (roomsIds.length -1 === index) {
-                    db
-                        .collection("reservation")
-                        .add(JSON.parse(JSON.stringify(reservation)))
-                        .then(() => {
-                            res.send(`The Reservation with ID: '${reservationId}' is commited succesfully!`)
+    
+    db
+    .collection("reservation")
+    .add(JSON.parse(JSON.stringify(reservation)))
+    .then(() => {
+        let today = new Date().toISOString().slice(0,10)
+        if(resDate.slice(0,10) === today) {
+            reservation
+            .getRoomsIds
+            .map(rid => {
+                db
+                    .collection("room")
+                    .where("roomId", "==",rid)
+                    .get()
+                    .then((data) => {
+                        data.docs.map((doc) => {
+                                doc.ref.update({availability: false})
                         })
-                        .catch((err) => {
-                            console.error(err)
-                            res.status(500).json("Something went wrong!")
-                        })
-                }
+                    }) 
+                    .catch((err) => {
+                        console.error(err)
+                        return res.status(500).send("Something went wrong!")
+                    })
             })
-            .catch((err) => {
-                console.error(err)
-                return res.status(500).send("Something went wrong")
-            })
+        }
+        return res.send(`Reservation with ${reservation.getReservationId} is ok...`)
+    })
+    .catch((err) => {
+        console.error(err)
+        return res.status(500).send("Something went wrong!")
     })
 }
 
@@ -210,7 +211,7 @@ exports.postReview = (req, res) => {
         rating
     } = req.body
 
-    let review = new Review(reviewId, userId, comment, date, rating)
+    let review = new Review(reviewId, userId, comment, date, +rating)
 
     if (Object.keys(review).length === 0) {
         res.status(400).send('There is no review to add!')
@@ -323,7 +324,9 @@ exports.getCustomerBonus = (req, res) => {
         .where("userId", "==", userId)
         .get()
         .then(data => {
-            return res.json(data.docs[0].data().bonusPoints)
+            return res.json({
+                bonusPoints: data.docs[0].data().bonusPoints
+            })
         })
         .catch(err => {
             console.error(err)
@@ -349,11 +352,11 @@ exports.updateCustomerBonus = (req, res) => {
         .get()
         .then((data) => {
             if (data.docs.length == 0) {
-                return res.status(404).send('No docs found')
+                return res.status(404).send('No customer found')
             }
             data.docs.map(doc => {
                 doc.ref.update({
-                    bonusPoints
+                    bonusPoints: +bonusPoints
                 })
             })
             return data
@@ -366,4 +369,111 @@ exports.updateCustomerBonus = (req, res) => {
             res.status(500).send('Something went wrong...')
         })
 
+}
+
+/**
+ * @author Dimitris Giannopoulos 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getAvailableRooms = (req, res) => {
+    db
+        .collection("room")
+        .where("availability", "==", true)
+        .get()
+        .then((data) => {
+            let rooms = data.docs.map(d => d.data())
+            return res.json(rooms)
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
+}
+
+/**
+ * @author George Koulos
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getRoomsByType = (req, res) => {
+    let type = req.params.type
+
+    db
+        .collection("room")
+        .where("type", "==", type)
+        .get()
+        .then(data => {
+            return data.docs.map(d => d.data())
+        })
+        .then(data => {
+            return res.json(data)
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
+}
+
+/**
+ * @author George Koulos
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getRoomsUntilPrice = (req, res) => {
+    let price = req.params.price
+    db
+        .collection("room")
+        .where("price", "<=", Number(price))
+        .get()
+        .then((data) => {
+            return res.json(data.docs.map(d => d.data()))
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
+}
+
+/**
+ * @author Dimitris Giannopoulos 
+ * @param {*} req 
+ * @param {*} res 
+*/
+exports.getAvailableRoomsByDate = (req, res) => {
+    let {
+        date
+    } = req.params
+    db
+        .collection("room")
+        .get()
+        .then((data) => {
+            let allRooms = data.docs.map(d => d.data())
+
+            db
+                .collection("reservation")
+                .get()
+                .then((data) => {
+                    let rooms = []
+                    let reservations = data.docs.map(d => d.data())
+                    let allRoomsIds = reservations
+                        .filter(r => r.resDate.slice(0, 10) === date.slice(0, 10))
+                        .map(r => r.roomsIds.map(rid => rid))
+                    allRooms.map(room => {
+                        let n = allRoomsIds.filter(rid => room.roomId === rid).length
+                        if (n === 0) {
+                            rooms.push(room)
+                        }
+                    })
+                    return res.json(rooms)
+                })
+                .catch(err => {
+                    console.error(err)
+                    return res.status(500).json("Something went wrong...")
+                })
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).json("Something went wrong...")
+        })
 }

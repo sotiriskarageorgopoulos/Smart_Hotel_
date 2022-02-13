@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 class Review {
     constructor(reviewId, userId, comment, date, rating) {
             this.reviewId = reviewId

@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 class Reservation {
     constructor(reservationId, roomsIds, resDate, duration, customerNotes, userId, decision, totalPrice) {
         this.reservationId = reservationId

@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 export const RoomService = Object.freeze({
     fridge: "fridge",
     coffee_maker: "coffe maker",

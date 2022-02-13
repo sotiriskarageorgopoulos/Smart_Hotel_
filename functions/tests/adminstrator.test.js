@@ -1,29 +1,23 @@
 const chai = require('chai')
 const assert = chai.assert
 const chaiHttp = require('chai-http');
-
-const Administrator = require('../model/administrator')
 chai.use(chaiHttp)
 
 suite('Administrator handler testing...', () => {
-    suite('Unit Tests', () => {
-
-    })
+    suite('Unit Tests', () => {})
 
     suite('Functional Tests', () => {
         /**
          * @author Georgios Koulos
          */
-        suite('PUT/updateRoomPrice', () => {
+        suite('PUT /updateRoomPrice', () => {
             test('Testing the updateRoomPrice endpoint...', (done) => {
 
                 chai
                     .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
                     .put('/updateRoomPrice/104')
                     .type('form')
-                    .send({
-                        price: '80'
-                    })
+                    .send({price: '80'})
                     .end((err, res) => {
                         assert.equal(res.status, 200, 'Response status should be 200...')
                         assert.strictEqual(res.text, `room price for roomId 104 updated successfully!`)
@@ -31,7 +25,6 @@ suite('Administrator handler testing...', () => {
                     })
             })
         })
-
 
         /**
          * @author Georgios Koulos
@@ -43,9 +36,7 @@ suite('Administrator handler testing...', () => {
                     .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
                     .put('/updateRoomPriceWithDiscount/104')
                     .type('form')
-                    .send({
-                        discount: 0.10
-                    })
+                    .send({discount: 0.10})
                     .end((err, res) => {
                         assert.equal(res.status, 200, 'Response status should be 200...')
                         assert.strictEqual(res.text, `price with discount for roomId 104 updated successfully!`)
@@ -64,7 +55,6 @@ suite('Administrator handler testing...', () => {
                     .post('/room')
                     .type('form')
                     .send({
-
                         availability: true,
                         capacity: 2,
                         description: "double room with large balcony",
@@ -132,23 +122,19 @@ suite('Administrator handler testing...', () => {
                                     done()
                                 })
 
-
                         })
                     })
-                    /** 
+                    /**
                      * @author Dimitris Michailidis <dimmichlds@gmail.com>
                      */
-                    suite('/PUT doUnavailableRoom', () => {
-                        test('Testing doUnavailableRoom endpoint...', (done) => {
+                    suite('/PUT changeRoomAvailability', () => {
+                        test('Testing changeRoomAvailability endpoint...', (done) => {
                             chai
                                 .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
-                                .put('/api/doUnavailableRoom/101')
+                                .put('/api/changeRoomAvailability/101')
                                 .type('form')
-                                .send({
-                                    availability: false
-                                })
+                                .send({availability: false})
                                 .end((err, res) => {
-
                                     assert.equal(res.status, 200, 'Response status should be 200...')
                                     assert.notEqual(res.text, 'Something went wrong...')
                                     assert.isDefined(res.text)
@@ -157,31 +143,27 @@ suite('Administrator handler testing...', () => {
                                 })
                         })
                     })
-                    /** 
+                    /**
                      * @author Dimitris Michailidis <dimmichlds@gmail.com>
                      */
                     suite('/PUT upgradeRoomReservation', () => {
                         test('Testing upgradeRoomReservation endpoint...', (done) => {
                             chai
                                 .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
-                                .put('/api/upgradeRoomReservation/ghhghfhf')
+                                .put('/api/upgradeRoomReservation/CPU3ztfgW4ApBgxrYwLI/302')
                                 .type('form')
-                                .send({
-                                    roomId: ['101', '301']
-                                })
+                                .send({roomId: '302'})
                                 .end((err, res) => {
                                     if (res.status === 200) {
                                         assert.equal(res.status, 200, 'Response status should be 200...')
-                                        assert.strictEqual(res.text, 'Reservation upgraded successfully')
+                                        assert.strictEqual(res.text, 'Reservation upgraded successfully...')
                                     } else {
-                                        assert.strictEqual(res.text, 'Reservation not found')
+                                        assert.strictEqual(res.text, 'No such Reservation')
                                     }
                                     done()
                                 })
                         })
                     })
-
-
 
                     /**
                      * @author Tassou Venetia
@@ -196,7 +178,6 @@ suite('Administrator handler testing...', () => {
                                     assert.strictEqual(res.text, 'Customer with customerID zTJyKwYSMEelU24s19b58BuJoAd2 updated succesfully!')
                                     done()
                                 })
-
 
                         })
                     })
@@ -215,7 +196,63 @@ suite('Administrator handler testing...', () => {
                                 done()
                             })
 
+                    })
+                })
 
+                /**
+                 * @author Sotirios Karageorgopoulos
+                 * @param {*} req
+                 * @param {*} res
+                */
+                suite('GET /getAllCustomers', () => {
+                    test('Testing getAllCustomers endpoint...', (done) => {
+                        chai
+                            .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
+                            .get(`/getAllCustomers`)
+                            .end((err, res) => {
+                                assert.equal(res.statusCode, 200, "response must be 200")
+                                assert.isAtLeast(res.body.length, 1)
+                                done()
+                            })
+                    })
+                })
+
+                /**
+                 * @author Sotirios Karageorgopoulos
+                 * @param {*} req
+                 * @param {*} res
+                */
+                suite('POST /addService', () => {
+                    test('Testing addService endpoint...', (done) => {
+                        chai
+                            .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
+                            .post(`/addService/303`)
+                            .send({
+                                service: "Fridge"
+                            })
+                            .end((err, res) => {
+                                assert.equal(res.statusCode, 200, "response must be 200")
+                                assert.equal(res.text, `Service added successfully...`)
+                                done()
+                            })
+                    })
+                })
+
+                /**
+                 * @author Sotirios Karageorgopoulos
+                 * @param {*} req
+                 * @param {*} res
+                */
+                suite('DELETE /deleteService', () => {
+                    test('Testing addService endpoint...', (done) => {
+                        chai
+                            .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
+                            .delete(`/deleteService/303/Fridge`)
+                            .end((err, res) => {
+                                assert.equal(res.statusCode, 200, "response must be 200")
+                                assert.equal(res.text, `Service removed successfully...`)
+                                done()
+                            })
                     })
                 })
             })

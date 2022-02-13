@@ -1,8 +1,10 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 class Message {
-    constructor(senderId, receiverId, subject, text, date, isRead) {
+    constructor(senderId, receiverId, text, date, isRead) {
         this.senderId = senderId
         this.receiverId = receiverId
-        this.susbject = subject
         this.text = text
         this.date = date
         this.isRead = isRead
@@ -22,14 +24,6 @@ class Message {
 
     get getReceiverId() {
         return this.receiverId
-    }
-
-    set setSubject(subject) {
-        this.subject = subject
-    }
-
-    get getSubject() {
-        return this.subject
     }
 
     set setText(text) {

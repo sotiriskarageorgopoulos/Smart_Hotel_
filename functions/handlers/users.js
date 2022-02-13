@@ -1,5 +1,4 @@
 const {
-    admin,
     db
 } = require('../util/admin')
 
@@ -10,12 +9,17 @@ const {
 
 const firebase = require('firebase/app')
 const config = require('../util/config')
+const {
+    storeImgToBucket
+} = require('../util/image')
 
 firebase.initializeApp(config)
 
 const {
     validateEmailAndPassword
 } = require('../util/helper_functions')
+
+const Message = require('../model/message')
 
 /**
  * @author Sotiris Karageorgopoulos <sotiriskarageorgopoulos@gmail.com>
@@ -44,9 +48,64 @@ exports.login = (req, res) => {
             return data.user.getIdToken()
         })
         .then(token => {
-            return res.json({
-                token
-            })
+            db
+                .collection('administrator')
+                .where('email', '==', email)
+                .get()
+                .then((data) => {
+                    if (data.docs.length === 1) {
+                        let userData = data.docs.map(d => d.data())[0]
+                        return res.json({
+                            token,
+                            ...userData,
+                            category: "administrator"
+                        })
+                    }
+                })
+                .then(() => {
+                    db
+                        .collection('customer')
+                        .where('email', '==', email)
+                        .get()
+                        .then((data) => {
+                            if (data.docs.length === 1) {
+                                let userData = data.docs.map(d => d.data())[0]
+                                return res.json({
+                                    token,
+                                    ...userData,
+                                    category: "customer"
+                                })
+                            }
+                        })
+                        .catch((err) => {
+                            console.error(err)
+                            return res.status(500).send("Something went wrong...")
+                        })
+                })
+                .then(() => {
+                    db
+                        .collection('receptionist')
+                        .where('email', '==', email)
+                        .get()
+                        .then((data) => {
+                            if (data.docs.length === 1) {
+                                let userData = data.docs.map(d => d.data())[0]
+                                return res.json({
+                                    token,
+                                    ...userData,
+                                    category: "receptionist"
+                                })
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err)
+                            return res.status(500).send("Something went wrong...")
+                        })
+                })
+                .catch(err => {
+                    console.error(err)
+                    return res.status(500).send("Something went wrong")
+                })
         })
         .catch(err => {
             console.error(err)
@@ -74,7 +133,7 @@ exports.login = (req, res) => {
 exports.getRooms = (req, res) => {
     db
         .collection('room')
-        .orderBy('availability')
+        .orderBy('roomId')
         .get()
         .then((data) => {
             let room = data.docs.map(d => d.data())
@@ -106,27 +165,6 @@ exports.getRoom = (req, res) => {
         .catch(err => {
             console.error(err)
             return res.status(500).send("Something went wrong...")
-        })
-}
-
-/**
- * @author Dimitris Giannopoulos 
- * @param {*} req 
- * @param {*} res 
- */
-//Customer,Receptionist,Admin
-exports.getAvailableRooms = (req, res) => { //ok
-    db
-        .collection("room")
-        .where("availability", "==", true)
-        .get()
-        .then((data) => {
-            let rooms = data.docs.map(d => d.data())
-            return res.json(rooms)
-        })
-        .catch((err) => {
-            console.error(err)
-            return res.status(500).json("Something went wrong...")
         })
 }
 
@@ -175,53 +213,6 @@ exports.getReview = (req, res) => { //ok
 }
 
 /**
- * @author George Koulos
- * @param {*} req 
- * @param {*} res 
- */
-//Customer,Receptionist,Admin
-exports.getRoomsByType = (req, res) => {
-    let type = req.params.type
-  
-    db
-    .collection("room")
-    .where("type","==",type)
-    .get()
-     .then(data=> {
-        return data.docs.map(d=> d.data())
-     })
-     .then(data => {
-         return res.json(data)
-     })
-     .catch(err => {
-        console.error(err)
-        return res.status(500).send("Something went wrong")
-    })
-}
-
-/**
- * @author George Koulos
- * @param {*} req 
- * @param {*} res 
- */
-//Customer,Receptionist,Admin
-exports.getRoomsUntilPrice = (req, res) => {
-    let price = req.params.price
-        db
-        .collection("room")
-        .where("price","<=",Number(price))
-            .get()
-            .then((data) => {
-             return res.json(data.docs.map(d => d.data()))
-            })
-            .catch(err => {
-                    console.error(err)
-                    return res.status(500).json("Something went wrong...")
-        })
-    }
-
-
-/**
  * @author Venetia Tassou
  * @param {*} req 
  * @param {*} res 
@@ -231,13 +222,12 @@ exports.sendMessage = (req, res) => {
     let {
         senderId,
         receiverId,
-        susbject,
         text,
         date,
         isRead
     } = req.body
 
-    let message = new Message(senderId, receiverId, susbject, text, date, isRead)
+    let message = new Message(senderId, receiverId, text, date, Boolean(isRead))
 
     if (Object.keys(message).length == 0) {
         return res.status(400).send("Malformed request!")
@@ -259,9 +249,7 @@ exports.sendMessage = (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
-//Customer,Receptionist,Admin
-exports.getMessages = (req, res) => {
-
+exports.getSenders = (req, res) => {
     let receiverId = req.params.receiverId
 
     db
@@ -269,11 +257,82 @@ exports.getMessages = (req, res) => {
         .where("receiverId", "==", receiverId)
         .get()
         .then((data) => {
-            let messages = []
-            data.docs.map(d => {
-                messages.push(d.data())
+            let senderIds = [...new Set(data.docs.map(d => d.data().senderId))]
+
+            let messages = data.docs.map(s => s.data())
+                .sort((s1, s2) => new Date(s2.date) - new Date(s1.date))
+
+            let latestMessages = []
+            senderIds.map(sid => {
+                let count = 0
+                messages.map(m => {
+                    if (m.senderId === sid && count == 0) {
+                        latestMessages.push(m)
+                        count++
+                    }
+                })
             })
-            return res.json(messages)
+
+            return latestMessages
+        })
+        .then(latestMessages => {
+            db
+                .collection("customer")
+                .get()
+                .then((data) => {
+                    let senders = []
+                    let customers = data.docs.map(c => c.data())
+                    latestMessages.map(m => {
+                        let customer = customers.filter(c => c.userId === m.senderId)[0]
+                        if (customer !== undefined) {
+                            customer = {
+                                ...customer,
+                                text: m.text,
+                                isRead: m.isRead,
+                                date: m.date
+                            }
+                            senders.push(customer)
+                        }
+                    })
+                    return {
+                        senders,
+                        latestMessages
+                    }
+                })
+                .then((obj) => {
+                    db
+                        .collection("receptionist")
+                        .get()
+                        .then(data => {
+                            let {
+                                senders,
+                                latestMessages
+                            } = obj
+                            let receptionists = data.docs.map(r => r.data())
+                            latestMessages.map(m => {
+                                let receptionist = receptionists.filter(r => r.userId === m.senderId)[0]
+                                if (receptionist !== undefined) {
+                                    receptionist = {
+                                        ...receptionist,
+                                        text: m.text,
+                                        isRead: m.isRead,
+                                        date: m.date
+                                    }
+                                    senders.push(receptionist)
+                                }
+                            })
+                            senders.sort((s1, s2) => new Date(s2.date) - new Date(s1.date))
+                            return res.json(senders)
+                        })
+                        .catch((err) => {
+                            console.error(err)
+                            return res.status(500).send("Something went wrong...")
+                        })
+                })
+                .catch((err) => {
+                    console.error(err)
+                    return res.status(500).send("Something went wrong...")
+                })
         })
         .catch(err => {
             console.error(err)
@@ -286,8 +345,59 @@ exports.getMessages = (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
-exports.getMessage = (req, res) => {
+exports.getMessages = (req, res) => {
+    let {
+        senderId,
+        receiverId
+    } = req.params
 
+    db
+        .collection("message")
+        .where("senderId", "==", senderId)
+        .where("receiverId", "==", receiverId)
+        .get()
+        .then((data) => {
+            let messages = data.docs.map(d => d.data())
+            return res.json(messages)
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
+}
+
+/**
+ * @author Sotirios Karageorgopoulos
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.updIsReadMessages = (req, res) => {
+    let {
+        receiverId,
+        senderId
+    } = req.params
+    db
+        .collection("message")
+        .where("senderId", "==", senderId)
+        .where("receiverId", "==", receiverId)
+        .get()
+        .then(data => {
+            if (data.docs.length > 0) {
+                data.docs.map(d => {
+                    if (Boolean(d.isRead) === false) {
+                        d.ref.update({
+                            isRead: true
+                        })
+                    }
+                })
+                return res.send(`The messages are seen...`)
+            }
+            return res.status(404).send(`Messages not found...`)
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
 }
 
 /**
@@ -310,9 +420,20 @@ exports.updateProfileDetails = (req, res) => {
         .get()
         .then((data) => {
             if (data.docs.length > 0) {
-                data.docs.map(d => {
-                    d.ref.update(updOject)
-                })
+                if (updOject.hasOwnProperty("image")) {
+                    const img = updOject.image
+                    const imageURL = `https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/${userId}.png?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609`
+                    data.docs.map(doc => {
+                        doc.ref.update({
+                            image: imageURL
+                        })
+                    })
+                    storeImgToBucket(img, userId)
+                } else {
+                    data.docs.map(doc => {
+                        doc.ref.update(updOject)
+                    })
+                }
                 return res.send(`The profile with id: ${userId} has been updated`)
             }
             return data
@@ -325,10 +446,20 @@ exports.updateProfileDetails = (req, res) => {
                 .get()
                 .then((data) => {
                     if (data.docs.length > 0) {
-                        data.docs.map(d => {
-                            d.ref.update(updOject)
-
-                        })
+                        if (updOject.hasOwnProperty("image")) {
+                            const img = updOject.image
+                            const imageURL = `https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/${userId}.png?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609`
+                            data.docs.map(doc => {
+                                doc.ref.update({
+                                    image: imageURL
+                                })
+                            })
+                            storeImgToBucket(img, userId)
+                        } else {
+                            data.docs.map(doc => {
+                                doc.ref.update(updOject)
+                            })
+                        }
                         return res.send(`The profile with id: ${userId} has been updated`)
                     }
                     return data
@@ -341,13 +472,24 @@ exports.updateProfileDetails = (req, res) => {
                         .get()
                         .then((data) => {
                             if (data.docs.length > 0) {
-                                data.docs.map(d => {
-                                    d.ref.update(updOject)
-                                })
+                                if (updOject.hasOwnProperty("image")) {
+                                    const img = updOject.image
+                                    const imageURL = `https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/${userId}.png?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609`
+                                    data.docs.map(doc => {
+                                        doc.ref.update({
+                                            image: imageURL
+                                        })
+                                    })
+                                    storeImgToBucket(img, userId)
+                                } else {
+                                    data.docs.map(doc => {
+                                        doc.ref.update(updOject)
+                                    })
+                                }
                                 return res.send(`The profile with id: ${userId} has been updated`)
-                                
+
                             }
-                            return res.status(404).send("Documents not found")   
+                            return res.status(404).send("Documents not found")
                         })
                         .catch(err => {
                             console.error(err)
@@ -364,6 +506,61 @@ exports.updateProfileDetails = (req, res) => {
             return res.status(500).send("Something went wrong...")
         })
 
+
+}
+
+/**
+ * @author Sotrios Karageorgopoulos
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getUser = (req, res) => {
+    let {
+        userId
+    } = req.params
+    db
+        .collection("customer")
+        .where("userId", "==", userId)
+        .get()
+        .then((data) => {
+            if (data.docs.length > 0) {
+                let user = data.docs[0].data()
+                return res.json(user)
+            }
+            db
+                .collection("administrator")
+                .where("userId", "==", userId)
+                .get()
+                .then((data) => {
+                    if (data.docs.length > 0) {
+                        let user = data.docs[0].data()
+                        return res.json(user)
+                    }
+
+                    db
+                        .collection("receptionist")
+                        .where("userId", "==", userId)
+                        .get()
+                        .then((data) => {
+                            if (data.docs.length > 0) {
+                                let user = data.docs[0].data()
+                                return res.json(user)
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err)
+                            return res.status(500).send("Something went wrong...")
+                        })
+                })
+                .catch(err => {
+                    console.error(err)
+                    return res.status(500).send("Something went wrong...")
+                })
+        })
+        .catch(err => {
+            console.error(err)
+            return res.status(500).send("Something went wrong...")
+        })
 
 }
 
@@ -446,37 +643,43 @@ exports.updateReservationDecision = (req, res) => { //problem
 exports.getCustomer = (req, res) => {
     let userId = req.params.userId
     db
-    .collection("customer")
-    .where("userId","==",userId)
-    .get()
-    .then((data) =>{
-     if (data.docs.length === 0) {
-         return res.status(404).send("Documents not found")
-    }
-    return res.json(data.docs[0].data())
-    })
-    .catch((err) => {
-        console.error(err)
-        return res.status(500).send("Something went wrong")
-    })
+        .collection("customer")
+        .where("userId", "==", userId)
+        .get()
+        .then((data) => {
+            if (data.docs.length === 0) {
+                return res.status(404).send("Documents not found")
+            }
+            return res.json(data.docs[0].data())
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
 }
-
-
 
 /**
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */ //ok
-//Receptionist,Admin
+ */
 exports.getAllReservationsOfHotel = (req, res) => {
     db
         .collection("reservation")
-        .orderBy("resDate", "desc")
         .get()
         .then((data) => {
-            let reservations = data.docs.map(d => d.data())
-            return res.json(reservations)
+            let today = new Date();
+            let allRes = data.docs.map(d => d.data())
+            let reservations = []
+            allRes.map(r => {
+                let resDateStart = new Date(r.resDate)
+                let days = Number(r.duration) * 1000 * 60 * 60 * 24
+                let resDateEnd = new Date(resDateStart.getTime() + days)
+                if (today <= resDateEnd) {
+                    reservations.push(r)
+                }
+            })
+            return res.json(reservations.sort((r1, r2) => new Date(r2.resDate) - new Date(r1.resDate)))
         })
         .catch((err) => {
             console.error(err)
@@ -489,7 +692,7 @@ exports.getAllReservationsOfHotel = (req, res) => {
  * @author Dimitris Michailidis
  * @param {*} req 
  * @param {*} res 
- */ //ok
+ */
 //Receptionist,Admin
 exports.getReservationOfHotel = (req, res) => {
     let resId = req.params.resId
@@ -509,4 +712,81 @@ exports.getReservationOfHotel = (req, res) => {
             return res.status(500).send("Something went wrong")
         })
 
+}
+
+/**
+ * @author Dimitris Michailidis
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getReservationHistoryOfHotel = (req, res) => {
+    db
+        .collection('reservation')
+        .get()
+        .then((data) => {
+            let today = new Date()
+            let allRes = data.docs.map(d => d.data())
+            let reservations = []
+            allRes.map(r => {
+                let resDateStart = new Date(r.resDate)
+                let days = Number(r.duration) * 1000 * 60 * 60 * 24
+                let resDateEnd = new Date(resDateStart.getTime() + days)
+                if (today >= resDateEnd) {
+                    reservations.push(r)
+                }
+            })
+            return res.json(reservations.sort((r1, r2) => new Date(r2.resDate) - new Date(r1.resDate)))
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
+}
+
+/**
+ * @author Sotiris Karageorgopoulos
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.checkAvailabilityOfRooms = (req, res) => {
+    db
+        .collection("reservation")
+        .get()
+        .then((data) => {
+            let today = new Date()
+            let allRes = data.docs.map(r => r.data())
+            allRes
+                .map(r => {
+                    let resDateStart = new Date(r.resDate)
+                    let days = Number(r.duration) * 1000 * 60 * 60 * 24
+                    let resDateEnd = new Date(resDateStart.getTime() + days)
+                    if (resDateStart <= today && resDateEnd >= today && r.decision === "accepted") {
+                        r.roomsIds.map(rid => {
+                            db
+                                .collection("room")
+                                .where("roomId", "==", rid)
+                                .get()
+                                .then((data) => {
+                                    if (data.docs.length === 0) {
+                                        return res.status(404).send("Room not found!")
+                                    }
+                                    data.docs.map((doc) => {
+                                        doc.ref.update({
+                                            availability: false
+                                        })
+                                    })
+                                })
+                                .catch((err) => {
+                                    console.error(err)
+                                    return res.status(500).send("Something went wrong")
+                                })
+                        })
+                    }
+                })
+            return res.send("The availability check is ok...")
+        })
+        .catch((err) => {
+            console.error(err)
+            return res.status(500).send("Something went wrong")
+        })
 }

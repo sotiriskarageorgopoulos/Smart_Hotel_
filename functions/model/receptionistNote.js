@@ -1,3 +1,6 @@
+/**
+ * @author Dimitris Giannopoulos
+ */
 class ReceptionistNote {
     constructor(receptionistId, reservationId, date, text){
         this.receptionistId = receptionistId

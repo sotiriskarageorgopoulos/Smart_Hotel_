@@ -102,7 +102,7 @@ suite('Users handler testing...', () => {
                     })
                     .end((err, res) => {
                         assert.equal(res.status, 200, 'Response status should be 200...')
-                        assert.strictEqual(Object.keys(res.body).length, 1)
+                        assert.isAtLeast(Object.keys(res.body).length, 1)
                         done()
                     })
             })
@@ -110,38 +110,35 @@ suite('Users handler testing...', () => {
         /**
          * @author Tassou Venetia
          */
-        suite('Testing get user messages..', () => {
-            test('test user messages', (done) => {
+        suite('GET /getMessages', () => {
+            test('Testing getMessages endpoint...', (done) => {
                 chai
                     .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
-                    .get(`/getMessages/uydyug`)
+                    .get('/getMessages/rBOy7dZzKDJV2xJqujms/sZ9QpKdOKSCvDEcIbQDt')
                     .end((err, res) => {
                         assert.equal(res.statusCode, 200, "response must be 200")
                         assert.isAtLeast(res.body.length, 1)
                         done()
                     })
-
+            })
+        })
+        /**
+         * @author Tassou Venetia
+         */
+        suite('Testing user send message..', () => {
+            test('test send message', (done) => {
+                let message = new Message("jdfhjfdsh", "uydyug", "mpla", "mpla mpla", "2022-01-16T09:58:54.932Z", true)
+                chai
+                    .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
+                    .post(`/sendMessage`)
+                    .send(JSON.parse(JSON.stringify(message)))
+                    .end((err, res) => {
+                        assert.equal(res.statusCode, 200, "response must be 200")
+                        assert.strictEqual(res.text, `The message send by ${message.getSenderId}`)
+                        done()
+                    })
             })
 
-
-            /**
-             * @author Tassou Venetia
-             */
-            suite('Testing user send message..', () => {
-                test('test send message', (done) => {
-                    let message = new Message("jdfhjfdsh", "uydyug", "mpla", "mpla mpla", "2022-01-16T09:58:54.932Z", true)
-                    chai
-                        .request("http://localhost:5000/smart-hotel-7965b/europe-west6/api")
-                        .post(`/sendMessage`)
-                        .send(JSON.parse(JSON.stringify(message)))
-                        .end((err, res) => {
-                            assert.equal(res.statusCode, 200, "response must be 200")
-                            assert.strictEqual(res.text, `The message send by ${message.getSenderId}`)
-                            done()
-                        })
-                })
-
-            })
             /**
              * @author Dimitris Giannopoulos
              */
@@ -157,20 +154,7 @@ suite('Users handler testing...', () => {
                         })
                 })
             })
-            /**
-             * @author Dimitris Giannopoulos
-             */
-            suite('GET /availableRooms', () => {
-                test('Testing the getAvailableRooms endpoint...', (done) => {
-                    chai
-                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
-                        .get('/availableRooms')
-                        .end((err, res) => {
-                            assert.equal(res.status, 200, 'Response status should be 200...')
-                            done()
-                        })
-                })
-            })
+
             /**
              * @author Dimitris Giannopoulos
              */
@@ -192,20 +176,15 @@ suite('Users handler testing...', () => {
                 test('Testing the getReview endpoint...', (done) => {
                     chai
                         .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
-                        .get('/review/hgjhghj')
+                        .get('/review/xnjcssjxnjsxnjsxjn')
                         .end((err, res) => {
-                            let result = {
-                                reviewId: "hgjhghj",
-                                userId: "hggh",
-                                rating: 3,
-                                comment: "very good",
-                                date: "2022-01-12T16:37:00Z"
-                            }
                             assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.equal(Object.keys(res.body).length, 5)
                             done()
                         })
                 })
             })
+
             /**
              * @author Dimitris Giannopoulos
              */
@@ -213,22 +192,110 @@ suite('Users handler testing...', () => {
                 test('Testing the updateReservationDecision endpoint...', (done) => {
                     chai
                         .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
-                        .put('/updateReservationDecision/res229')
+                        .put('/updateReservationDecision/CPU3ztfgW4ApBgxrYwLI')
                         .type('form')
                         .send({
-                            decision: "rejected"
+                            decision: "accepted"
                         })
                         .end((err, res) => {
                             assert.equal(res.status, 200, 'Response status should be 200...')
-                            assert.strictEqual(res.text, `Reservation with id res229 updated succesfully`)
+                            assert.strictEqual(res.text, `Reservation with id CPU3ztfgW4ApBgxrYwLI updated succesfully`)
                             done()
                         })
                 })
             })
+
+            /**
+             * @author Sotiris Karageorgopoulos
+             */
+            suite('PUT /updIsReadMessages', () => {
+                test('Testing the updateReservationDecision endpoint...', (done) => {
+                    chai
+                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                        .put('/updIsReadMessages/rBOy7dZzKDJV2xJqujms/sZ9QpKdOKSCvDEcIbQDt')
+                        .end((err, res) => {
+                            assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.strictEqual(res.text, `The messages are seen...`)
+                            done()
+                        })
+                })
+            })
+
+            /**
+             * @author Dimitris Michailidis
+             * @param {*} req 
+             * @param {*} res 
+             */
+            suite('GET /getReservationHistoryOfHotel', () => {
+                test('Testing getReservationHistoryOfHotel endpoint...', (done) => {
+                    chai
+                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                        .get('/getReservationHistoryOfHotel')
+                        .end((err, res) => {
+                            assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.isAtLeast(res.body.length, 1)
+                            done()
+                        })
+                })
+            })
+
+            /**
+             * @author Sotiris Karageorgopoulos
+             * @param {*} req 
+             * @param {*} res 
+             */
+            suite('PUT /checkAvailabilityOfRooms', () => {
+                test('Testing checkAvailabilityOfRooms endpoint...', (done) => {
+                    chai
+                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                        .put('/checkAvailabilityOfRooms')
+                        .end((err, res) => {
+                            assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.equal(res.text, 'The availability check is ok...')
+                            done()
+                        })
+                })
+            })
+
+
+            /**
+             * @author Sotiris Karageorgopoulos
+             */
+            suite('GET /user', () => {
+                test('Testing the user endpoint...', (done) => {
+                    chai
+                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                        .get('/user/rBOy7dZzKDJV2xJqujms')
+                        .end((err, res) => {
+                            assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.isAtLeast(Object.keys(res.body).length, 8)
+                            done()
+                        })
+                })
+            })
+
+            /**
+             * @author Venetia Tassou
+             * @param {*} req 
+             * @param {*} res 
+             */
+            suite('GET /getSenders', () => {
+                test('Testing the user endpoint...', (done) => {
+                    chai
+                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6/api')
+                        .get('/getSenders/rBOy7dZzKDJV2xJqujms')
+                        .end((err, res) => {
+                            assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.isAtLeast(res.body.length, 1)
+                            done()
+                        })
+                })
+            })
+
             /**
              * @author Dimitris Michailidis <dimmichlds@gmail.com>
              */
-            suite('GET/AllReservations', () => {
+            suite('GET /getAllReservationsOfHotel', () => {
                 test('Testing getAllReservationsOfHotel endpoint', (done) => {
                     chai
                         .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
@@ -295,67 +362,37 @@ suite('Users handler testing...', () => {
                         })
                 })
             })
-        })
-    })
-     /**
-     * @author George Koulos
-     */
-      suite('GET/getRoomsByType', () => {
-        test('Testing getRoomsByType endpoint', (done) => {
-            chai
-                .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
-                .get('/api/getRoomsByType/double')
-                .type('form')
-                .end((err, res) => {
-                    assert.equal(res.status, 200, 'Response status should be 200...')
-                    assert.isAtLeast(res.body.length, 1)
-                    done()
+
+            /**
+             * @author George Koulos
+             */
+            suite('GET /getCustomer', () => {
+                test('Testing getCustomer endpoint', (done) => {
+                    let customer = {
+                        "birthDate": "1948-06-07T00:00:00.000Z",
+                        "password": "123456",
+                        "userId": "ZYioRvOtwNRDzX9DFlgS8WiCKHy1",
+                        "bonusPoints": 0,
+                        "name": "Hlias",
+                        "blackListed": false,
+                        "image": "https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/no-img.png?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609",
+                        "surname": "Panagoulis",
+                        "nationality": "Greece",
+                        "email": "panago@gmail.com",
+                        "tel": "2105656233"
+                    }
+                    chai
+                        .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
+                        .get('/api/getCustomer/ZYioRvOtwNRDzX9DFlgS8WiCKHy1')
+                        .type('form')
+                        .end((err, res) => {
+                            assert.equal(res.status, 200, 'Response status should be 200...')
+                            assert.deepEqual(res.body, customer)
+                            done()
+                        })
                 })
+            })
         })
     })
-        /**
-     * @author George Koulos
-     */
-         suite('GET/getRoomsUntilPrice', () => {
-            test('Testing getRoomsUntilPrice endpoint', (done) => {
-                chai
-                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
-                    .get('/api/getRoomsUntilPrice/70')
-                    .type('form')
-                    .end((err, res) => {
-                        assert.equal(res.status, 200, 'Response status should be 200...')
-                        assert.isAtLeast(res.body.length, 1)
-                        done()
-                    })
-            })
-        })
-          /**
-     * @author George Koulos
-     */
-           suite('GET/getCustomer', () => {
-            test('Testing getCustomer endpoint', (done) => {
-            let customer = {
-                    "birthDate": "1948-06-07T00:00:00.000Z",
-                    "password": "123456",
-                    "userId": "ZYioRvOtwNRDzX9DFlgS8WiCKHy1",
-                    "bonusPoints": 0,
-                    "name": "Hlias",
-                    "blackListed": false,
-                    "image": "https://firebasestorage.googleapis.com/v0/b/smart-hotel-7965b.appspot.com/o/no-img.png?alt=media&token=57ccaa66-55b5-41b3-b5b7-57d46f424609",
-                    "surname": "Panagoulis",
-                    "nationality": "Greece",
-                    "email": "panago@gmail.com",
-                    "tel": "2105656233"
-                }
-                chai
-                    .request('http://localhost:5000/smart-hotel-7965b/europe-west6')
-                    .get('/api/getCustomer/ZYioRvOtwNRDzX9DFlgS8WiCKHy1')
-                    .type('form')
-                    .end((err, res) => {
-                        assert.equal(res.status, 200, 'Response status should be 200...')
-                        assert.deepEqual(res.body, customer)
-                        done()
-                    })
-            })
-        })    
+
 })

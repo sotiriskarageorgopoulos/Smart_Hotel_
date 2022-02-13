@@ -3,6 +3,10 @@ const {
     db
 } = require("../util/admin")
 
+const { 
+    getMonth
+} = require("../util/month")
+
 /**
  * @author George Koulos
  * @param {*} req 
@@ -19,13 +23,13 @@ exports.getReservationsByDate = (req, res) => {
     .then((data) => {
         let dates = []
         data.map(d => {
-            let date = new Date(d.resDate._seconds * 1000).toISOString().slice(0, 10)
+            let date = d.resDate.slice(0, 10)
             dates.push(date)
         })
         dates = [...new Set(dates)]
         let resByDate = []
         dates.map(date => {
-            let reservations = data.filter(d => date === new Date(d.resDate._seconds * 1000).toISOString().slice(0, 10)).length
+            let reservations = data.filter(d => date === d.resDate.slice(0, 10)).length
             resByDate.push({
                 date,
                 reservations
@@ -54,7 +58,7 @@ exports.getIncomeByDate = (req, res) => {
         .then((data) => {
             let dates = []
             data.map(d => {
-                let date = new Date((d.resDate._seconds) * 1000).toISOString().slice(0, 10)
+                let date = d.resDate.slice(0, 10)
                 dates.push(date)
             })
             dates = [...new Set(dates)]
@@ -63,7 +67,7 @@ exports.getIncomeByDate = (req, res) => {
                 let totalIncome = 0
                 data
                     .filter(doc => {
-                        let date = new Date((doc.resDate._seconds) * 1000).toISOString().slice(0, 10)
+                        let date = doc.resDate.slice(0, 10)
                         return date === d
                     })
                     .map(doc => {
@@ -91,7 +95,7 @@ exports.getIncomeByDate = (req, res) => {
  * @param {*} req 
  * @param {*} res 
  */
-exports.getRoomWithMaxReservations = (req, res) => { //went wrong
+exports.getRoomWithMaxReservations = (req, res) => {
 
     db
         .collection("room")
@@ -154,15 +158,15 @@ exports.getReservationsByMonth = (req, res) => {
         .then((data) => {
             let months = []
             data.map(d => {
-                let month = new Date(d.resDate._seconds * 1000).toISOString().slice(5, 7)
+                let month = d.resDate.slice(5, 7)
                 months.push(month)
             })
             months = [...new Set(months)]
             let resByMonth = []
-            months.map(month => {
-                let reservations = data.filter(d => month === new Date(d.resDate._seconds * 1000).toISOString().slice(5, 7)).length
+            months.map(m => {
+                let reservations = data.filter(d => m === d.resDate.slice(5, 7)).length
                 resByMonth.push({
-                    month,
+                    month: getMonth(m),
                     reservations
                 })
             })
@@ -204,6 +208,7 @@ exports.getNumberOfCustomersByNationality = (req, res) => {
             return customerByNationality
         })
         .then((data) => {
+            data.sort((d1,d2) => d2.people - d1.people)
             return res.json(data)
         })
         .catch(err => {
@@ -268,6 +273,4 @@ exports.getMostDemandRooms = (req, res) => {
             console.error(err)
             return res.status(500).send("Something went wrong")
         })
-
-
 }
