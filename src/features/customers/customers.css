@@ -1,0 +1,36 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.customers-heading {
+    text-align: center;
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+.customer-details {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.customer-list-item {
+    color: var(--clr-primary-3);
+    font-weight: 600;
+    margin-bottom: 2%;
+}
+
+.customer-btns {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    justify-content: space-around;
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width: 1024px) {
+    /*να γινει το flex-flow του customer-btns column*/
+}

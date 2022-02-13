@@ -1,0 +1,48 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.customer-details-box {
+    background-color: var(--clr-grey-10);
+    color: var(--clr-primary-3);
+    border-radius: var(--radius);
+}
+
+.customer-details-title {
+    color: var(--clr-primary-3);
+    font-size: var(--x-big-font-size);
+    font-family: Vujahday;
+    text-align: center;
+    padding: 2%;
+}
+
+.customer-image {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.customer-info-span {
+    font-weight:700;
+}
+
+.customer-info-p {
+    padding: 0% 2% 1% 2%;
+    font-size: var(--medium-font-size);
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width:912px) {
+    /*margin-top μεγαλυτερο μεταξύ φορμας και navbar*/
+    /*margin-bottom μεγαλυτερο μεταξύ φορμας και footer*/
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width:540px) {
+     /*margin-top κανονικο μεταξύ φορμας και navbar*/
+    /*margin-bottom κανονικο μεταξύ φορμας και footer*/
+}

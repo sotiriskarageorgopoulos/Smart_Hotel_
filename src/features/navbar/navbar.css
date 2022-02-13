@@ -1,0 +1,29 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.nav-link {
+    color: unset;
+    color: var(--clr-primary-10);
+    text-decoration: unset;
+}
+
+.nav-link:hover {
+    color: var(--clr-grey-9);
+    text-decoration: none;
+}
+
+.settings {
+    text-decoration: none;
+    color: unset;
+    color: var(--clr-grey-6);
+}
+
+.settings:hover {
+    color: var(--clr-grey-2); 
+}
+
+.nav-link:visited {
+    color: var(--clr-primary-10);
+}

@@ -1,0 +1,27 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.add-room-title {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: var(--big-font-size);
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width: 1280px) {
+    /*Το πλάτος της φόρμας να γίνει 100%*/
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width:412px) {
+    /*Μικρότερη γραμματοσειρά τίτλων*/
+}

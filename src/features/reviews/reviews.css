@@ -1,0 +1,35 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.reviews-heading {
+    text-align: center;
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+.reviews-list-item {
+    color: var(--clr-primary-3);
+    font-weight: 600;
+}
+
+.rating-star {
+    color: var(--rating-star);
+}
+
+.review-del-icon {
+    text-align: right;
+    color: var(--clr-grey-6);
+}
+
+.review-del-icon:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.modal-rating-star {
+    color: var(--clr-primary-3);
+    font-weight: 500;
+}

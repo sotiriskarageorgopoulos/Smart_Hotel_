@@ -1,0 +1,30 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.messages-heading {
+    text-align: center;
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+.message-list-item {
+    color: var(--clr-primary-3);
+}
+
+.message-list:hover {
+    cursor: pointer;
+    background-color: var(--clr-grey-9);
+}
+
+.message-list-icon {
+    color: var(--clr-primary-3);
+}
+
+.is-read-style {
+    color: var(--clr-grey-5);
+    font-weight: 100;
+    font-size: 11px;
+}

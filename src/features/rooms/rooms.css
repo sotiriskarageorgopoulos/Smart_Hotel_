@@ -1,0 +1,20 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.image-card {
+    height: 30vh;
+}
+
+.available-room {
+    color: var(--clr-green-dark);
+    font-weight: 700;
+    font-size: var(--medium-font-size);
+}
+
+.unavailable-room {
+    color: var(--clr-red-dark);
+    font-weight: 700;
+    font-size: var(--medium-font-size);
+}

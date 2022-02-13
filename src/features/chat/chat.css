@@ -1,0 +1,57 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.chat-header {
+    text-align: center;
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+.chat {
+    background-color: var(--clr-grey-10);
+    padding: 2%;
+    border-radius: var(--radius);
+}
+
+.message {
+    width:100%;
+    background-color: var(--clr-primary-3);
+    border-radius: var(--radius);
+    padding: 1%;
+    color: var(--clr-white);
+    padding: 2%;
+}
+
+.message-date {
+    margin-bottom: 0;
+    font-size: 12px;
+    font-weight: 100;
+}
+
+.sender {
+    margin-bottom: 0%;
+    color: var(--clr-grey-4);
+    font-size: var(--small-font-size)
+}
+
+.message-input {
+    width: 100%;
+}
+
+.send-icon {
+    color: var(--clr-primary-3);
+}
+
+.send-icon:hover {
+    cursor: pointer;
+    color: var(--clr-primary-2);
+}
+
+.is-read-chat-style {
+    font-size: 11px;
+    font-weight: 100;
+    
+}

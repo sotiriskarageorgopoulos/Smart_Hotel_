@@ -1,0 +1,40 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.profile-details-box {
+    background-color: var(--clr-grey-10);
+    color: var(--clr-primary-3);
+    border-radius: var(--radius);
+}
+
+.profile-details-title {
+    color: var(--clr-primary-3);
+    font-size: var(--x-big-font-size);
+    font-family: Vujahday;
+    text-align: center;
+    padding: 2%;
+}
+
+.profile-info-p {
+    padding: 0% 2% 1% 2%;
+    font-size: var(--medium-font-size);
+}
+
+.profile-info-span {
+    font-weight:700;
+}
+
+.profile-image {
+    margin: 0 auto 5% auto;
+}
+
+.upd-pencil:hover{
+    cursor: pointer;
+    opacity: 0.8; 
+}
+
+.upd-profile-modal-btn {
+    width: 30%;
+}

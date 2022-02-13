@@ -1,0 +1,43 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.register-title {
+    margin-left: auto;
+    margin-right: auto;
+    font-size: var(--big-font-size);
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+.register-btn {
+    width: 30%;
+}
+
+.register-container {
+    margin-top: 3%;
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width:912px) {
+    /*Μεγαλύτερο margin top μεταξύ form και navbar*/
+    /*Μεγαλύτερο margin bottom μεταξύ form και navbar*/
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width:540px) {
+    /*Δεν θέλουμε margin bottom μεταξύ form και navbar: margin-bottom: unset;*/
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width:414px) {
+    /*Μικρότερη γραμματοσειρά*/
+}

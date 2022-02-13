@@ -1,0 +1,39 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.room-desc {
+    display: flex;
+    flex-flow: column nowrap; 
+}
+
+.room-span {
+    font-size: var(--medium-font-size);
+}
+
+.form-customer {
+    padding: 0%;
+    border-radius: var(--radius);
+    margin-top: 3%;
+}
+
+.form-customer-input {
+    width: 20%;
+    margin-left: 5%;
+}
+
+.search-title {
+    font-family: Vujahday;
+    color: var(--clr-primary-3);
+    font-size: var(--x-big-font-size);
+    text-align: center;
+    font-weight: 700;
+    margin-top:2%;
+}
+
+.reserved-btns {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+}

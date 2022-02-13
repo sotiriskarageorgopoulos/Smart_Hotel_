@@ -1,0 +1,40 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.res-history-rooms-header {
+    color: var(--clr-primary-3);
+    font-family: Vujahday;
+    font-weight: 700;
+}
+
+.res-history-p {
+    color: var(--clr-primary-3);
+    font-weight: 700;
+}
+
+.pdf-link {
+    text-decoration: none; 
+}
+
+.pdf-link:hover {
+    text-decoration: none;
+}
+
+.res-history-container {
+    margin-bottom: 10%;
+}
+
+.res-history-btns {
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width: 1024px) {
+ /*res-history-btns width: 60%*/
+}

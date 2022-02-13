@@ -1,0 +1,25 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.statistics-table-header {
+    font-family: Vujahday;
+    color: var(--clr-grey-1);
+    text-align: center;
+    font-weight: 700;
+    margin-top:2%;
+}
+
+.room-max-res-box {
+    background-color: var(--clr-grey-10);
+    color: var(--clr-primary-3);
+    border-radius: var(--radius);
+}
+
+.most-demand-rooms {
+    color: var(--clr-primary-3);
+    font-family: Vujahday;
+    font-weight: 700;
+    text-align: center;
+}

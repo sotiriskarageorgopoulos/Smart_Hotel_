@@ -1,0 +1,50 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.res-header {
+    color: var(--clr-primary-3);
+    font-size: var(--x-big-font-size);
+    font-family: Vujahday;
+}
+
+.res-info-heading {
+    color: var(--clr-primary-3);
+    font-size: var(--medium-font-size);
+}
+
+.res-info {
+    font-weight: 500;
+}
+
+.res-buttons-rec,
+.res-buttons-admin {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+}
+
+.res-buttons-rec {
+    width: 40%;
+}
+
+.customer-details-link {
+    text-decoration: none;
+    color: var(--clr-primary-3);
+    font-size: var(--medium-font-size);
+    font-weight: 500;
+}
+
+.customer-details-link:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width: 1024px) {
+    /*.res-buttons-admin width 70%*/
+    /*.res-buttons-rec width 70%*/
+}

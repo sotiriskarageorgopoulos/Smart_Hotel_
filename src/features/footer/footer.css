@@ -1,0 +1,36 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.hotel-address a,
+.hotel-address {
+    color: var(--clr-primary-10);
+    text-decoration: none;
+}
+
+.social-media-style {
+    color: var(--clr-primary-10);
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.social-media-icon:hover {
+    color: var(--clr-grey-9);
+    cursor:  pointer;
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width: 1024px) {
+    /*.social-media-style το width μεγαλυτερο*/
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width:767px) {
+    /*.social-media-style το width 30%*/
+}

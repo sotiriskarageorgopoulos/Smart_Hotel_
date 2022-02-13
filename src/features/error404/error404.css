@@ -1,0 +1,43 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.error-404-container {
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+.error-box {
+    padding: 2%;
+    color: var(--clr-grey-1);
+    background-color: var(--clr-primary-4);
+    border-radius: var(--radius);
+    font-size: var(--xx-big-font-size);
+    font-family: Vujahday;
+}
+
+.error-link {
+    font-size: var(--x-big-font-size);
+    color: var(--clr-grey-1);
+}
+
+.error-link:hover {
+    color: var(--clr-grey-1);
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width: 912px) {
+    /*margin-top kai bottom μεγαλύτερο*/
+}
+
+/**
+ * @author Dimitris Giannopoulos
+ */
+@media only screen and (max-width: 767px) {
+    /*margin-top kai bottom κανονικο*/
+}

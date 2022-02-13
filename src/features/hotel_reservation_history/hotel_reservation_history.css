@@ -1,0 +1,28 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.hotel-res-history-header {
+    font-family: Vujahday;
+    color: var(--clr-grey-1);
+    text-align: center;
+    font-size: var(--xx-big-font-size);
+    font-weight: 700;
+    margin-top:2%;
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width: 912px) {
+    /*Μεγάλο margin top bottom*/
+}
+
+/**
+ * @author Giorgos Koulos
+ */
+@media only screen and (max-width: 540px) {
+    /*Να μειωθεί η γραμματοσειρα*/
+    /*Κανονικό margin top bottom*/
+}

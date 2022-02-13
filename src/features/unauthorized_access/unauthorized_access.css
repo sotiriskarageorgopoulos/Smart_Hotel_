@@ -1,0 +1,16 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.access-denied {
+    width: 100%;
+    background-color: var(--clr-primary-9);
+    color: var(--clr-grey-2);
+    font-size: var(--big-font-size);
+    margin-top: 40%;
+    margin-bottom: 50%;
+    text-align: center;
+    padding: 4%;
+    border-radius: var(--radius);
+}

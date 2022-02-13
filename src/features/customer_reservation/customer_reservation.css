@@ -1,0 +1,26 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+@import url('../../index.css');
+
+.cus-res-header {
+    text-align: center;
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    font-size: var(--xx-big-font-size);
+}
+
+.rooms-cus-res-header {
+    color: var(--clr-primary-4);
+    font-family: Vujahday;
+    margin-top: 5%;
+}
+
+.cus-res-discount,
+.cus-res-bonus-points,
+.cus-res-total-price,
+.cus-res-room-ids {
+    color: var(--clr-primary-4);
+    font-size: var(--medium-font-size);
+}
+

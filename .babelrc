@@ -1,0 +1,7 @@
+/**
+ * @author Sotirios Karageorgopoulos
+ */
+{
+  "presets": ["@babel/preset-env", "@babel/preset-react"],
+  "plugins": []
+}
