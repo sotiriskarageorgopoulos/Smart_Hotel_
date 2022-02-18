@@ -33,4 +33,9 @@
  */
 @media only screen and (max-width: 1024px) {
     /*να γινει το flex-flow του customer-btns column*/
+    .customer-btns{
+        display: flex;
+        flex-flow: column nowrap; 
+    }
+    
 }
