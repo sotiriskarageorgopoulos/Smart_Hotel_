@@ -17,11 +17,19 @@
  */
 @media only screen and (max-width: 1280px) {
     /*Το πλάτος της φόρμας να γίνει 100%*/
+    .form {
+        width: 100%;
+    }
+    
 }
 
 /**
  * @author Giorgos Koulos
  */
-@media only screen and (max-width:412px) {
+@media only screen and (max-width:820px) {
     /*Μικρότερη γραμματοσειρά τίτλων*/
+    .add-room-title {
+        
+        font-size: var(--big-font-size);
+    }
 }
