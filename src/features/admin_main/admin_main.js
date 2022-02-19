@@ -269,7 +269,7 @@ export const AdminMainAuth = () => {
                             <div className="row">
                                 <h4>Services</h4>
                                 {roomServices.map((s,i) => (
-                                    <div className="col-sm-4" key={i}>
+                                    <div className="col-sm-6" key={i}>
                                         <FormControlLabel  control={<Checkbox onChange={handleServicesValues} value={s}/>} label={s} />
                                     </div>
                                 ))}

@@ -17,12 +17,11 @@
  */
 @media only screen and (max-width: 912px) {
     /*Μεγάλο margin top bottom*/
+    .hotel-res-history-header{
+       margin-top: 5%;
+       margin-bottom: 3%;
+       font-size: var(--big-font-size);
+    }
 }
 
-/**
- * @author Giorgos Koulos
- */
-@media only screen and (max-width: 540px) {
-    /*Να μειωθεί η γραμματοσειρα*/
-    /*Κανονικό margin top bottom*/
-}
+
