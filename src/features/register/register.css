@@ -26,6 +26,12 @@
 @media only screen and (max-width:912px) {
     /*Μεγαλύτερο margin top μεταξύ form και navbar*/
     /*Μεγαλύτερο margin bottom μεταξύ form και navbar*/
+
+    .form{
+
+        margin-top: 50%;
+        margin-bottom: 70%;
+    }
 }
 
 /**
@@ -33,6 +39,11 @@
  */
 @media only screen and (max-width:540px) {
     /*Δεν θέλουμε margin bottom μεταξύ form και navbar: margin-bottom: unset;*/
+    .form{
+        margin-bottom:16%;
+        margin-top: 20%;
+    }
+   
 }
 
 /**
@@ -40,4 +51,8 @@
  */
 @media only screen and (max-width:414px) {
     /*Μικρότερη γραμματοσειρά*/
+
+    .register-title{
+        font-size:var(--x-big-font-size);
+    }
 }
