@@ -23,7 +23,7 @@
 }
 
 .customer-info-span {
-    font-weight:700;
+    font-weight: 700;
 }
 
 .customer-info-p {
@@ -35,14 +35,11 @@
  * @author Dimitris Michailidis
  */
 @media only screen and (max-width:912px) {
-    /*margin-top μεγαλυτερο μεταξύ φορμας και navbar*/
-    /*margin-bottom μεγαλυτερο μεταξύ φορμας και footer*/
-}
 
-/**
- * @author Dimitris Michailidis
- */
-@media only screen and (max-width:540px) {
-     /*margin-top κανονικο μεταξύ φορμας και navbar*/
-    /*margin-bottom κανονικο μεταξύ φορμας και footer*/
+    .customer-details-box {
+        margin-top: 25%;
+        margin-bottom: 30%;
+    }
+
+
 }
