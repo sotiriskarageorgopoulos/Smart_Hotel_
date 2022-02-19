@@ -33,11 +33,29 @@
  */
 @media only screen and (max-width: 912px) {
     /*margin-top kai bottom μεγαλύτερο*/
+
+    .error-404-container {
+        margin-top: 20%;
+        margin-bottom: 50%;
+    }
 }
 
 /**
  * @author Dimitris Giannopoulos
  */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
     /*margin-top kai bottom κανονικο*/
+
+    .error-404-container {
+        margin-top: 20%;
+        margin-bottom: 50%;
+    }
+
+    .error-box {
+        font-size: var(--x-big-font-size);
+    }
+
+    error-link {
+        font-size: var(--x-big-font-size);
+    }
 }

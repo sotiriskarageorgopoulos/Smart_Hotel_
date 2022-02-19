@@ -63,11 +63,12 @@
 @media only screen and (max-width:912px) {
     /*Μεγαλύτερο margin top μεταξύ τίτλου και navbar*/
     /*O χάρτης να έχει μικρότερο ύψος*/
-}
+    .smart-hotel-title {
+        margin-top: 10%;
+    }
 
-/**
- * @author Dimitris Giannopoulos
- */
-@media only screen and (max-width:414px) {
-    /*Μικρότερη γραμματοσειρά σε όλους τους τίτλους*/
+    .map-style {
+        height: 30vh;
+    }
+
 }

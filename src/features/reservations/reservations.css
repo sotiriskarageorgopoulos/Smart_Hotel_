@@ -47,4 +47,11 @@
 @media only screen and (max-width: 1024px) {
     /*.res-buttons-admin width 70%*/
     /*.res-buttons-rec width 70%*/
+
+    .res-buttons-admin {
+        width: 100%;
+    }
+    .res-buttons-rec {
+        width: 90%;
+    }
 }

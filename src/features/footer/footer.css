@@ -26,11 +26,17 @@
  */
 @media only screen and (max-width: 1024px) {
     /*.social-media-style το width μεγαλυτερο*/
-}
 
+    .social-media-style {
+        width: 50%;
+}
+}
 /**
  * @author Dimitris Giannopoulos
  */
 @media only screen and (max-width:767px) {
     /*.social-media-style το width 30%*/
+    .social-media-style {
+        width: 40%;
+}
 }

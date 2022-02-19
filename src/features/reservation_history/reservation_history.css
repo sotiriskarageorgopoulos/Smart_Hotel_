@@ -37,4 +37,8 @@
  */
 @media only screen and (max-width: 1024px) {
  /*res-history-btns width: 60%*/
+ .res-history-btns {
+    width: 60%;
+ }
+
 }
