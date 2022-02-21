@@ -91,16 +91,16 @@ app.delete('/deleteRoom/:roomId', deleteRoom)
 app.put('/updateRoomDetails/:roomId', updateRoomDetails)
 app.put('/postBlacklistedCustomer/:userId', postBlacklistedCustomer)
 app.put('/removeBlacklistedCustomer/:userId', removeBlacklistedCustomer)
-app.get('/getAllCustomers', getAllCustomers) //testing
-app.post('/addService/:roomId', addService) //testing
-app.delete('/deleteService/:roomId/:service', deleteService) //testing
+app.get('/getAllCustomers', getAllCustomers) 
+app.post('/addService/:roomId', addService) 
+app.delete('/deleteService/:roomId/:service', deleteService) 
 
 //users routes
 app.post('/login', login)
-app.get('/user/:userId', getUser) //testing
-app.get('/getSenders/:receiverId', getSenders) //testing
+app.get('/user/:userId', getUser)
+app.get('/getSenders/:receiverId', getSenders)
 app.get('/getMessages/:receiverId/:senderId', getMessages)
-app.put('/updIsReadMessages/:receiverId/:senderId', updIsReadMessages) //testing
+app.put('/updIsReadMessages/:receiverId/:senderId', updIsReadMessages)
 app.get('/rooms', getRooms)
 app.get('/room/:roomId', getRoom)
 app.get('/reviews', getReviews)
@@ -108,11 +108,11 @@ app.get('/review/:revId', getReview)
 app.get('/getCustomer/:userId', getCustomer)
 app.get('/getAllReservationsOfHotel', getAllReservationsOfHotel)
 app.get('/getReservationOfHotel/:resId', getReservationOfHotel)
-app.get('/getReservationHistoryOfHotel', getReservationHistoryOfHotel) //testing
+app.get('/getReservationHistoryOfHotel', getReservationHistoryOfHotel)
 app.post('/sendMessage', sendMessage)
 app.put('/updateReservationDecision/:resId', updateReservationDecision)
 app.put('/updateProfileDetails/:userId', updateProfileDetails)
-app.put('/checkAvailabilityOfRooms', checkAvailabilityOfRooms) //testing
+app.put('/checkAvailabilityOfRooms', checkAvailabilityOfRooms)
 app.delete('/deleteReview/:revId', deleteReview)
 
 //customers routes
@@ -123,7 +123,7 @@ app.get('/getCustomerBonus/:userId', getCustomerBonus)
 app.get('/getRoomsByType/:type', getRoomsByType)
 app.get('/getRoomsUntilPrice/:price', getRoomsUntilPrice)
 app.post('/postReview', postReview)
-app.get('/getAvailableRoomsByDate/:date',getAvailableRoomsByDate)//testing
+app.get('/getAvailableRoomsByDate/:date',getAvailableRoomsByDate)
 app.post('/doReservation', doReservation)
 app.post('/register', register)
 app.put('/updateReview/:revId', updateReview)
@@ -132,7 +132,7 @@ app.delete('/cancelReservation/:resId', cancelReservation)
 
 //receptionist routes
 app.post('/postNotesAboutReservation', postNotesAboutReservation)
-app.get('/getNotesAboutReservation/:resId', getNotesAboutReservation) //testing
-app.delete('/delNotesAboutReservation/:resId', deleteNotesAboutReservation) //testing
+app.get('/getNotesAboutReservation/:resId', getNotesAboutReservation) 
+app.delete('/delNotesAboutReservation/:resId', deleteNotesAboutReservation) 
 
 exports.api = functions.region("europe-west6").https.onRequest(app)
