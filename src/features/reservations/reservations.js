@@ -98,7 +98,7 @@ const ResButtons = ({reservationId,roomsIds}) => {
     const [roomValue, setRoomValue] = useState({})
     const [choice, setChoice] = useState("")
     const [notes, setNotes] = useState({
-        reservationId,
+        reservationId: "",
         receptionistId: login.userId,
         text: "",
         date: new Date().toISOString()
@@ -115,9 +115,10 @@ const ResButtons = ({reservationId,roomsIds}) => {
             .then(res => setFetchedNotes(res.data))
     }
     
-    const handleOpenNotes = () => {
+    const handleOpenNotes = (resId) => {
         getReceptionistNotes()
         setChoice("notes")
+        setNotes({...notes, reservationId: resId})
         setOpen(true)
     }
 
@@ -172,7 +173,7 @@ const ResButtons = ({reservationId,roomsIds}) => {
         <div className={login.category === 'administrator'? "res-buttons-admin mt-3" : "res-buttons-rec mt-3"}>
             <Button variant="contained" onClick={() => {accept(reservationId)}}>Accept</Button>
             <Button variant="contained" onClick={() => {decline(reservationId)}} color="error">Decline</Button>
-            <Button variant="contained" onClick={handleOpenNotes} color="warning" color="secondary">Notes</Button>
+            <Button variant="contained" onClick={() => handleOpenNotes(reservationId)} color="warning" color="secondary">Notes</Button>
             {login.category === 'administrator'?<Button variant="contained" color="warning" onClick={handleOpen}>Upgrade</Button>: ""}
             <Modal
                 open={open}
@@ -185,7 +186,7 @@ const ResButtons = ({reservationId,roomsIds}) => {
                         <div className="col-sm-4"></div>
                         <div className="col-sm-4">
                             {login.category === 'administrator' && choice !== "notes"?
-                            <form className="form modal-form">
+                            <form className="form modal-form" method="post">
                                 <div className="x-circle-box">
                                     <XCircleFill size={20} className="x-circle d-flex" onClick={handleClose}/>
                                 </div>

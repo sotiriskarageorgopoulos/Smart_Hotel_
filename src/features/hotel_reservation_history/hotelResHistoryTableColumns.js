@@ -2,16 +2,6 @@
  * @author Sotirios Karageorgopoulos
  */
 export const hotelResHistoryCol = [
-    { 
-        id: 'name',
-        label: 'customer name',
-        minWidth: 170
-    },
-    { 
-        id: 'surname',
-        label: 'customer surname',
-        minWidth: 170
-    },
     {
         id: "resDate",
         label:'reservation date',
@@ -32,17 +22,7 @@ export const hotelResHistoryCol = [
     },
     {
         id:'customerNotes',
-        label: 'customerNotes',
-        minWidth: 1200
-    },
-    { 
-        id: 'receptionistId',
-        label: 'receptionist id',
-        minWidth: 170
-    },
-    {
-        id: 'text',
-        label: 'receptionistNotes',
+        label: 'customer notes',
         minWidth: 1200
     }
 ]

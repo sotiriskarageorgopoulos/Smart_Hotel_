@@ -41,28 +41,8 @@ const HotelReservationHistoryAuth = () => {
             let endpoint = endpoints.filter(e => e.name === "getReservationHistoryOfHotel")[0]
             axios.get(endpoint.path)
                 .then(res => {
-                    let endpoint = endpoints.filter(e => e.name === "getCustomer")[0]
-                    let resHistory = []
                     let reservations = res.data
-                    reservations.map(r => {
-                        axios.get(endpoint.path+r.userId)
-                             .then(res => {
-                                let customer = res.data
-                                let {name,surname} = customer
-                                let endpoint = endpoints.filter(e => e.name === 'getNotesAboutReservation')[0]
-                                axios.get(endpoint.path+r.reservationId)
-                                         .then(res => {
-                                            let receptionistNotes = res.data
-                                            let {receptionistId,text} = receptionistNotes
-                                            resHistory.push({...r,name,surname,receptionistId,text})
-                                            setHotelResHistory(resHistory)
-                                         })
-                                         .catch(err => {
-                                            resHistory.push({...r,name,surname}) 
-                                            setHotelResHistory(resHistory)
-                                         })
-                             })
-                    })
+                    setHotelResHistory(reservations)
                 })
         }
 

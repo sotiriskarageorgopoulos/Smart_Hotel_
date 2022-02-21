@@ -24,7 +24,7 @@
 .customer-btns {
     display: flex;
     flex-flow: row nowrap;
-    width: 100%;
+    width: 90%;
     justify-content: space-around;
 }
 
@@ -36,6 +36,10 @@
     .customer-btns{
         display: flex;
         flex-flow: column nowrap; 
+    }
+
+    .customer-btns > button {
+        margin-top: 4%;
     }
     
 }

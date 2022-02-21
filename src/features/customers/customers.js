@@ -87,7 +87,7 @@ export const CustomerAuth = () => {
                                         <span className="customer-list-item">tel: {c.tel}</span>
                                         <span className="customer-list-item">{Boolean(c.blackListed) === true? "Blacklisted Customer": ""}</span>
                                         <span className="customer-btns">
-                                            <Button onClick={() => addBlackList(c.userId)} size="small" variant="contained" color="error" className="mb-3">Add Black List</Button>
+                                            <Button onClick={() => addBlackList(c.userId)} size="small" variant="contained" color="error">Add Black List</Button>
                                             {Boolean(c.blackListed) === true? <Button onClick={() => removeBlackList(c.userId)} size="small" variant="contained" color="warning">Remove Black List</Button>: ""}
                                         </span>
                                     </span>
